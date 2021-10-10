@@ -1,154 +1,330 @@
 body {
-    background-color: lightblue;
+  background-color: lightblue;
 }
 
 .hull {
-    position: absolute;
-    top:40vh;
-    left:40vw;
-    width:18vw;
-    height: 20vh;
-    border-top-left-radius: 10%;
-    border-top-right-radius: 300%;
-    border-bottom-left-radius: 200%;
-    border-bottom-right-radius: 80%;
-    background:#ffcc00;
+  position: absolute;
+  top: 40vh;
+  left: 40vw;
+  width: 18vw;
+  height: 20vh;
+  border-top-left-radius: 10%;
+  border-top-right-radius: 300%;
+  border-bottom-left-radius: 200%;
+  border-bottom-right-radius: 80%;
+  background: #ffcc00;
 }
 
 .front_window {
-    position: relative;
-    top:1vh;
-    left:9vw;
-    width:9vw;
-    height: 13vh;
-    border-top-right-radius: 200%;
-    border-bottom-left-radius: 20%;
-    background:rgb(0, 195, 255);
+  position: relative;
+  top: 1vh;
+  left: 9vw;
+  width: 9vw;
+  height: 13vh;
+  border-top-right-radius: 200%;
+  border-bottom-left-radius: 20%;
+  background: rgb(0, 195, 255);
 }
 .rear_window {
-    position: relative;
-    top:-16vh;
-    left:4vw;
-    width:4vw;
-    height: 11vh;
-    border-radius: 20%;
-    background:rgb(0, 195, 255);
+  position: relative;
+  top: -16vh;
+  left: 4vw;
+  width: 4vw;
+  height: 11vh;
+  border-radius: 20%;
+  background: rgb(0, 195, 255);
 }
 .tail {
-    position: relative;
-    top:-14vh;
-    left:-16vw;
-    width:25vw;
-    height: 6vh;
-    border-top-left-radius: 1000%;
-    border-top-right-radius: 50%;
-    border-bottom-left-radius: 100%;
-    background:#ffcc00;
+  position: relative;
+  top: -14vh;
+  left: -16vw;
+  width: 25vw;
+  height: 6vh;
+  border-top-left-radius: 1000%;
+  border-top-right-radius: 50%;
+  border-bottom-left-radius: 100%;
+  background: #ffcc00;
 }
 .tail_flap_top {
-    position: relative;
-    top:-3vh;
-    left:0vw;
-    width:3vw;
-    height: 10vh;
-    border-top-left-radius: 300%;
-    border-top-right-radius: 1000%;
-    background:#ffcc00;
+  position: relative;
+  top: -3vh;
+  left: 0vw;
+  width: 3vw;
+  height: 10vh;
+  border-top-left-radius: 300%;
+  border-top-right-radius: 1000%;
+  background: #ffcc00;
 }
 .tail_flap_bottom {
-    position: relative;
-    top:-5vh;
-    left:0vw;
-    width:4vw;
-    height: 4vh;
-    border-bottom-left-radius: 500%;
-    border-bottom-right-radius: 1000%;
-    background:#ffcc00;
+  position: relative;
+  top: -5vh;
+  left: 0vw;
+  width: 4vw;
+  height: 4vh;
+  border-bottom-left-radius: 500%;
+  border-bottom-right-radius: 1000%;
+  background: #ffcc00;
 }
 .propeller_base {
-    position: relative;
-    top:-33vh;
-    left:3vw;
-    width:4vw;
-    height:2vh;
-    background:#777778;
+  position: relative;
+  top: -33vh;
+  left: 3vw;
+  width: 4vw;
+  height: 2vh;
+  background: #777778;
 }
 .propeller_core {
-    position: relative;
-    top:-40vh;
-    left:4.4vw;
-    width:1.2vw;
-    height:6vh;
-    background:#777778;
+  position: relative;
+  top: -40vh;
+  left: 4.4vw;
+  width: 1.2vw;
+  height: 6vh;
+  background: #777778;
 }
 .main_propeller_1 {
-    position: relative;
-    top:-45vh;
-    left:6vw;
-    width:20vw;
-    height:3vh;
-    border-top-left-radius: 10%;
-    border-top-right-radius: 300%;
-    border-bottom-left-radius: 200%;
-    border-bottom-right-radius: 80%;
-    background:#777778;
+  position: relative;
+  top: -45vh;
+  left: 6vw;
+  width: 20vw;
+  height: 3vh;
+  border-top-left-radius: 10%;
+  border-top-right-radius: 300%;
+  border-bottom-left-radius: 200%;
+  border-bottom-right-radius: 80%;
+  background: #777778;
 }
 .main_propeller_2 {
-    position: relative;
-    top:-49vh;
-    left:-16vw;
-    width:20vw;
-    height:3vh;
-    border-top-left-radius: 80%;
-    border-top-right-radius: 200%;
-    border-bottom-left-radius: 300%;
-    border-bottom-right-radius: 10%;
-    background:#777778;
+  position: relative;
+  top: -49vh;
+  left: -16vw;
+  width: 20vw;
+  height: 3vh;
+  border-top-left-radius: 80%;
+  border-top-right-radius: 200%;
+  border-bottom-left-radius: 300%;
+  border-bottom-right-radius: 10%;
+  background: #777778;
 }
 .skids_handler {
-    position: relative;
-    top:-27vh;
-    left:7vw;
-    width:1.2vw;
-    height:7vh;
-    background:#777778;
+  position: relative;
+  top: -27vh;
+  left: 7vw;
+  width: 1.2vw;
+  height: 7vh;
+  background: #777778;
 }
 .skids {
-    position: relative;
-    top:-29vh;
-    left:3vw;
-    width:13vw;
-    height:2vh;
-    border-top-left-radius: 20%;
-    border-top-right-radius: 100%;
-    border-bottom-left-radius: 0%;
-    border-bottom-right-radius: 0%;
-    background:#777778;
+  position: relative;
+  top: -29vh;
+  left: 3vw;
+  width: 13vw;
+  height: 2vh;
+  border-top-left-radius: 20%;
+  border-top-right-radius: 100%;
+  border-bottom-left-radius: 0%;
+  border-bottom-right-radius: 0%;
+  background: #777778;
 }
 .cloud_1 {
-    position: absolute;
-    top:7vh;
-    left:55vw;
-    width:24vh;
-    height:24vh;
-    border-radius: 100%;
-    background:white;
+  position: absolute;
+  top: 7vh;
+  left: 55vw;
+  width: 24vh;
+  height: 24vh;
+  border-radius: 100%;
+  background: white;
 }
 .cloud_2 {
-    position: absolute;
-    top:10vh;
-    left:60vw;
-    width:40vh;
-    height:40vh;
-    border-radius: 100%;
-    background:white;
+  position: absolute;
+  top: 10vh;
+  left: 60vw;
+  width: 40vh;
+  height: 40vh;
+  border-radius: 100%;
+  background: white;
 }
 .cloud_3 {
-    position: absolute;
-    top:20vh;
-    left:50vw;
-    width:30vh;
-    height:30vh;
-    border-radius: 100%;
-    background:white;
+  position: absolute;
+  top: 20vh;
+  left: 50vw;
+  width: 30vh;
+  height: 30vh;
+  border-radius: 100%;
+  background: white;
+}
+
+.sun {
+  position: absolute;
+  top: 5vh;
+  left: 12vh;
+  height: 15vh;
+  width: 15vh;
+  border-radius: 100%;
+  background: yellow;
+}
+
+.ray_1 {
+  position: relative;
+  top: 120%;
+  left: 43%;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  background: yellow;
+}
+
+.ray_2 {
+  position: relative;
+  top: -50%;
+  left: 150%;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  transform: rotate(90deg);
+  background: yellow;
+}
+
+.ray_3 {
+  position: relative;
+  top: -118%;
+  left: -60%;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  transform: rotate(90deg);
+  background: yellow;
+}
+
+.ray_4 {
+  position: relative;
+  top: -280%;
+  left: 43%;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  background: yellow;
+}
+
+.ray_5 {
+  position: relative;
+  top: -48vh;
+  left: -5vh;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  transform: rotate(125deg);
+  background: yellow;
+}
+
+.ray_6 {
+  position: relative;
+  top: -35vh;
+  left: -6vh;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  transform: rotate(45deg);
+  background: yellow;
+}
+
+.ray_7 {
+  position: relative;
+  top: -45vh;
+  left: 19vh;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  background: yellow;
+  transform: rotate(125deg);
+}
+
+.ray_8 {
+  position: relative;
+  top: -78vh;
+  left: 19vh;
+  height: 10vh;
+  width: 2vh;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  transform: rotate(45deg);
+  background: yellow;
+}
+
+.cloud_4 {
+  position: absolute;
+  top: 60vh;
+  left: 10vw;
+  width: 35vh;
+  height: 25vh;
+  border-radius: 100%;
+  background: white;
+}
+.cloud_5 {
+  position: absolute;
+  top: 70vh;
+  left: 20vw;
+  width: 35vh;
+  height: 25vh;
+  border-radius: 100%;
+  background: white;
+}
+.cloud_6 {
+  position: absolute;
+  top: 70vh;
+  left: 3vw;
+  width: 40vh;
+  height: 25vh;
+  border-radius: 100%;
+  background: white;
+}
+
+.cloud_7 {
+  position: absolute;
+  top: 60vh;
+  right: 9vw;
+  width: 20vh;
+  height: 15vh;
+  border-radius: 100%;
+  background: white;
+}
+.cloud_8 {
+  position: absolute;
+  top: 60vh;
+  right: 16vw;
+  width: 16vh;
+  height: 12vh;
+  border-radius: 100%;
+  background: white;
+}
+.cloud_9 {
+  position: absolute;
+  top: 65vh;
+  right: 14vw;
+  width: 16vh;
+  height: 13vh;
+  border-radius: 100%;
+  background: white;
 }
