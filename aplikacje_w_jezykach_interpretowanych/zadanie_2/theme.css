@@ -1,0 +1,14 @@
+.card {
+	background-color: rgb(185, 218, 255);
+}
+
+.table {
+	background-color: rgb(255, 255, 255);
+}
+
+body {
+	max-width: "20vw";
+	min-height: 100vh;
+	max-width: 60vw;
+	margin: 0 auto;
+}
