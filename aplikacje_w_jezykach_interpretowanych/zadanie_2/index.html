@@ -12,20 +12,30 @@
 		<script src="scripts.js"></script>
 		<title>MyTODO App</title>
 	</head>
-	<body class="xd">
+	<body">
 		<h1 class="m-5">MyNotes</h1>
 		<div class="card m-5">
 			<div class="m-5">
 				<div class="col-auto">
-					<label class="form-label">Search</label>
+					<label class="form-label">Search by name</label>
 				</div>
 				<div class="col-auto">
 					<input
 						class="form-control"
 						type="text"
 						id="inputSearch"
-						placeholder="Type Your seach here..."
+						placeholder="Type Your search pattern here..."
 					/>
+				</div>
+			</div>
+			<div class="row g-3 m-3">
+				<div class="col-3">
+					<label class="form-label">From date:</label>
+					<input class="form-control" type="date" id="inputSearchFromDate" />
+				</div>
+				<div class="col-3">
+					<label class="form-label">Due date:</label>
+					<input class="form-control" type="date" id="inputSearchDueDate" />
 				</div>
 			</div>
 		</div>
@@ -34,18 +44,19 @@
 				<table class="table table-striped, table-bordered">
 					<thead>
 						<tr>
-							<th>title</th>
-							<th>description</th>
-							<th>place</th>
-							<th>dueDate</th>
-							<th>options</th>
+							<th>Title</th>
+							<th>Description</th>
+							<th>Place</th>
+							<th>From date</th>
+							<th>Due date</th>
+							<th>Options</th>
 						</tr>
 					</thead>
 					<tbody id="todoListView"></tbody>
 				</table>
 			</div>
 
-			<form class="row g-3 m-5">
+			<form class="row g-3 m-3">
 				<div class="col-2">
 					<label class="form-label">Title</label>
 					<input class="form-control" type="text" id="inputTitle" />
@@ -57,16 +68,22 @@
 				<div class="col-2">
 					<label class="form-label">Place</label>
 					<input class="form-control" type="text" id="inputPlace" />
+				</div>	
+			</form>
+			<form class="row g-3 m-3">
+				<div class="col-3">
+					<label class="form-label">From date:</label>
+					<input class="form-control" type="date" id="inputFromDate" />
 				</div>
 				<div class="col-3">
-					<label class="form-label">Due date</label>
-					<input class="form-control" type="date" id="inputDate" />
+					<label class="form-label">Due date:</label>
+					<input class="form-control" type="date" id="inputDueDate" />
 				</div>
 				<div class="col-1 mt-5">
 					<input
 						class="btn btn-primary"
 						type="button"
-						value="add note"
+						value="Add note"
 						onclick="addTodo()"
 					/>
 				</div>
