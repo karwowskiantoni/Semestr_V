@@ -2,7 +2,7 @@
 let todoList = [];
 
 function updateJsonBin() {
-  let req = new XMLHttpRequest();
+  const req = new XMLHttpRequest();
   req.onreadystatechange = () => {
     if (req.readyState == XMLHttpRequest.DONE) {
       console.log(req.responseText);
@@ -19,7 +19,7 @@ function updateJsonBin() {
 }
 
 function getListFromApi() {
-  let req = new XMLHttpRequest();
+  const req = new XMLHttpRequest();
   req.onreadystatechange = () => {
     if (req.readyState == XMLHttpRequest.DONE) {
       todoList = JSON.parse(req.responseText);
@@ -47,7 +47,6 @@ function addTodo() {
     title: document.getElementById("inputTitle").value,
     description: document.getElementById("inputDescription").value,
     place: document.getElementById("inputPlace").value,
-    fromDate: document.getElementById("inputFromDate").value,
     dueDate: document.getElementById("inputDueDate").value,
   });
   updateJsonBin();
@@ -55,73 +54,49 @@ function addTodo() {
 
 function updateTodoList() {
   document.getElementById("todoListView").innerHTML = "";
-  let filterInput = document.getElementById("inputSearch");
-  const searchFromDate = document.getElementById("inputSearchFromDate").value;
-  const searchDueDate = document.getElementById("inputSearchDueDate").value;
+  const filterInput = document.getElementById("inputSearch").value;
+  const filterFromDate = document.getElementById("inputSearchFromDate").value;
+  const filterDueDate = document.getElementById("inputSearchDueDate").value;
   todoList
-    .filter(
-      (todo) =>
-        filterInput.value == "" ||
-        todo.title.includes(filterInput.value) ||
-        todo.description.includes(filterInput.value) ||
-        todo.place.includes(filterInput.value)
-    )
-    .filter((todo) =>
-      true
-        ? isInRange(searchFromDate, searchDueDate, todo.fromDate, todo.dueDate)
-        : console.log("e")
-    )
-
+    .filter((todo) => filterInput === "" || isInToDo(todo, filterInput))
+    .filter((todo) => filterFromDate === "" || todo.dueDate >= filterFromDate)
+    .filter((todo) => filterDueDate === "" || todo.dueDate <= filterDueDate)
     .forEach(renderTodo);
 }
 
-function isInRange(searchFromDate, searchDueDate, todoFromDate, todoDueDate) {
-  if (searchFromDate && searchDueDate) {
-    const result =
-      useDate(searchFromDate) < useDate(todoFromDate) &&
-      useDate(searchFromDate) < useDate(todoFromDate) &&
-      useDate(searchDueDate) > useDate(todoFromDate) &&
-      useDate(searchFromDate) < useDate(todoDueDate) &&
-      useDate(searchDueDate) > useDate(todoDueDate) &&
-      useDate(todoFromDate) < useDate(todoDueDate);
-    console.log(result);
-    return result;
-  } else {
-    return false;
-  }
-}
-
-function useDate(date) {
-  return Date.parse(date);
+function isInToDo(todo, value) {
+  return (
+    todo.title.includes(value) ||
+    todo.description.includes(value) ||
+    todo.place.includes(value)
+  );
 }
 
 function renderTodo(todo) {
-  let row = document.createElement("tr");
-  let title = document.createElement("td");
-  let description = document.createElement("td");
-  let place = document.createElement("td");
-  let fromDate = document.createElement("td");
-  let dueDate = document.createElement("td");
-  let button = document.createElement("td");
+  const row = document.createElement("tr");
+  const title = document.createElement("td");
+  const description = document.createElement("td");
+  const place = document.createElement("td");
+  const dueDate = document.createElement("td");
+  const button = document.createElement("td");
 
   title.appendChild(document.createTextNode(todo.title));
   description.appendChild(document.createTextNode(todo.description));
   place.appendChild(document.createTextNode(todo.place));
-  fromDate.appendChild(document.createTextNode(todo.fromDate));
   dueDate.appendChild(document.createTextNode(todo.dueDate));
   button.appendChild(createDeleteButton(todo));
 
   row.appendChild(title);
   row.appendChild(description);
   row.appendChild(place);
-  row.appendChild(fromDate);
   row.appendChild(dueDate);
   row.appendChild(button);
   document.getElementById("todoListView").appendChild(row);
 }
 
 function createDeleteButton(todo) {
-  let button = document.createElement("input");
+  // <input type="button" className=>delete</input>
+  const button = document.createElement("input");
   button.type = "button";
   button.value = "delete";
   button.className = "btn btn-outline-danger";
