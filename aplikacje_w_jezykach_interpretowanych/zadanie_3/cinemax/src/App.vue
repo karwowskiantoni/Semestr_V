@@ -1,26 +1,29 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <Search />
+    <FilmTable />
+    <GenreList />
+    <CastList />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Search from "./components/Search.vue";
+import FilmTable from "./components/FilmTable.vue";
+import GenreList from "./components/FilmsListByGenre.vue";
+import CastList from "./components/FilmsListByCast.vue";
+import "bootstrap";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  components: { Search, FilmTable, GenreList, CastList },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-left: 21vw;
+  margin-right: 21vw;
 }
+@import "~bootstrap/dist/css/bootstrap.css";
 </style>
