@@ -31,14 +31,15 @@
 </template>
 
 <script>
-import database from "../resources/movies.json";
-
 export default {
   data: function() {
     return {
-      movies: database.movies,
       length: 10,
     };
+  },
+  name: "FilmTable",
+  props: {
+    movies: Array,
   },
 };
 </script>

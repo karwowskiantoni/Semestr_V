@@ -5,6 +5,7 @@
       <div class="form-group">
         <label for="inputTitle">Tytuł</label>
         <input
+          v-on:change="title = $event.target.value"
           type="text"
           id="inputTitle"
           class="form-control"
@@ -17,6 +18,7 @@
         >
         <div class="col-sm-8">
           <input
+            v-on:change="beginYear = $event.target.value"
             type="text"
             id="inputProductionFrom"
             class="form-control"
@@ -30,6 +32,7 @@
         >
         <div class="col-sm-8">
           <input
+            v-on:change="endYear = $event.target.value"
             type="text"
             id="inputProductionTo"
             class="form-control"
@@ -40,6 +43,7 @@
       <div class="form-group">
         <label for="inputCast">Obsada</label>
         <input
+          v-on:change="cast = $event.target.value.split(', ')"
           type="text"
           id="inputCast"
           class="form-control"
@@ -47,13 +51,42 @@
         />
       </div>
       <div class="form-group row">
-        <input type="button" class="btn btn-info col-sm-12" value="Szukaj" />
+        <input
+          v-on:click="filterBy"
+          type="button"
+          class="btn btn-info col-sm-12"
+          value="Szukaj"
+        />
       </div>
     </form>
   </div>
 </template>
 
 <script>
+export default {
+  name: "Search",
+  props: {
+    movies: Array,
+  },
+  methods: {
+    filterBy() {
+      this.$emit("filter", {
+        title: this.title,
+        beginYear: this.beginYear,
+        endYear: this.endYear,
+        cast: this.cast,
+      });
+    },
+  },
+  data: function() {
+    return {
+      title: String,
+      beginYear: Date,
+      endYear: Date,
+      cast: Array,
+    };
+  },
+};
 </script>
 
 <style></style>
