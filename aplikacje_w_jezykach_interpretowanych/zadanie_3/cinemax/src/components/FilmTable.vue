@@ -10,77 +10,34 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="movie in movies" :key="movie.title">
-          <td>{{ movie.title }}</td>
-          <td>{{ movie.year }}</td>
-          <td>{{ movie.cast }}</td>
-          <td>{{ movie.genres }}</td>
+        <tr v-for="i in length" :key="i">
+          <td>{{ movies[i].title }}</td>
+          <td>{{ movies[i].year }}</td>
+          <td>
+            <div v-for="actor in movies[i].cast" :key="actor">
+              {{ actor }}
+            </div>
+          </td>
+          <td>
+            <div v-for="genre in movies[i].genres" :key="genre">
+              {{ genre }}
+            </div>
+          </td>
         </tr>
       </tbody>
+      <button v-on:click="length = length + 10">Pokaż więcej</button>
     </table>
   </div>
 </template>
 
 <script>
+import database from "../resources/movies.json";
+
 export default {
   data: function() {
     return {
-      movies: [
-        {
-          title: "Chained for Life",
-          year: 1951,
-          cast: ["Hilton Twins"],
-          genres: [],
-        },
-        {
-          title: "Cheese Chasers",
-          year: 1951,
-          cast: ["Looney Tunes"],
-          genres: ["Animated"],
-        },
-        {
-          title: "Chicago Calling",
-          year: 1951,
-          cast: ["Dan Duryea", "Mary Anderson"],
-          genres: ["Noir"],
-        },
-        {
-          title: "China Corsair",
-          year: 1951,
-          cast: ["Jon Hall", "Ernest Borgnine"],
-          genres: ["Adventure"],
-        },
-        {
-          title: "So This Is Paris",
-          year: 1955,
-          cast: ["Tony Curtis", "Gloria DeHaven"],
-          genres: ["Musical"],
-        },
-        {
-          title: "Soldier of Fortune",
-          year: 1955,
-          cast: ["Clark Gable", "Susan Hayward"],
-          genres: ["Drama"],
-        },
-        {
-          title: "Son of Sinbad",
-          year: 1955,
-          cast: ["Dale Robertson", "Sally Forrest", "Vincent Price"],
-          genres: ["Adventure"],
-        },
-        {
-          title: "Southbound Duckling",
-          year: 1955,
-          cast: ["Tom and Jerry"],
-          genres: ["Animated"],
-        },
-        {
-          title: "Special Delivery",
-          year: 1955,
-          cast: ["Joseph Cotten", "Eva Bartok"],
-          genres: ["Comedy"],
-        },
-      ],
+      movies: database.movies,
+      length: 10,
     };
   },
 };
