@@ -43,10 +43,15 @@ class MatrixGraph(Graph):
 
 
 class IncidentMatrixGraph(Graph):
+    def connection(self, actual_node, connection_number):
+        for i in range(len(self.nodes)):
+            if self.nodes[i][connection_number] == 1 and i is not ascii_to_index(actual_node):
+                return index_to_ascii(i)
+
     def neighbours(self, actual_node):
         neighbours = []
         node_bindings = self.nodes[ascii_to_index(actual_node)]
         for i in range(len(node_bindings)):
             if node_bindings[i] == 1:
-                neighbours.append(index_to_ascii(i))
+                neighbours.append(self.connection(actual_node, i))
         return neighbours

@@ -1,6 +1,6 @@
 from queue import Queue
-from Graph import ArrayGraph, NeighbourhoodArrayGraph, MatrixGraph
-from example_graphs import array_graph, neighbourhood_array_graph, matrix_graph
+from Graph import ArrayGraph, NeighbourhoodArrayGraph, MatrixGraph, IncidentMatrixGraph
+from example_graphs import array_graph, neighbourhood_array_graph, matrix_graph, incidents_matrix_graph
 
 
 class Parents:
@@ -49,8 +49,9 @@ if __name__ == '__main__':
     array_labyrinth = ArrayGraph(array_graph, 'h', 'f')
     neighbourhood_array_labyrinth = NeighbourhoodArrayGraph(neighbourhood_array_graph, 'h', 'f')
     matrix_labyrinth = MatrixGraph(matrix_graph, 'h', 'f')
+    incidents_matrix_labyrinth = IncidentMatrixGraph(incidents_matrix_graph, 'h', 'f')
 
     print(bfs(array_labyrinth))
     print(bfs(neighbourhood_array_labyrinth))
     print(bfs(matrix_labyrinth))
-
+    print(bfs(incidents_matrix_labyrinth))
