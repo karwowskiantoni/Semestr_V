@@ -1,10 +1,13 @@
+import time
+
 from queue import Queue
-from Graph import ArrayGraph, NeighbourhoodArrayGraph, MatrixGraph, IncidentMatrixGraph
-from example_graphs import array_graph, neighbourhood_array_graph, matrix_graph, incidents_matrix_graph
+from Graph import NeighbourhoodArrayGraph, IncidentMatrixGraph, ArrayGraph, MatrixGraph
+from example_graphs import neighbourhood_array_graph, incidents_matrix_graph, matrix_graph, array_graph
 
 
 class Parents:
-    parents = []
+    def __init__(self):
+        self.parents = []
 
     def push(self, node, parent_node):
         self.parents.append([node, parent_node])
@@ -25,7 +28,7 @@ class Parents:
         return path
 
 
-def bfs(labyrinth):
+def breadth_first_search(labyrinth):
     q = Queue()
     parents = Parents()
 
@@ -45,13 +48,50 @@ def bfs(labyrinth):
     return "Brak ścieżki do celu"
 
 
-if __name__ == '__main__':
-    array_labyrinth = ArrayGraph(array_graph, 'h', 'f')
-    neighbourhood_array_labyrinth = NeighbourhoodArrayGraph(neighbourhood_array_graph, 'h', 'f')
-    matrix_labyrinth = MatrixGraph(matrix_graph, 'h', 'f')
-    incidents_matrix_labyrinth = IncidentMatrixGraph(incidents_matrix_graph, 'h', 'f')
+def depth_first_search(labyrinth):
+    s = [labyrinth.begin_node]
+    parents = Parents()
 
-    print(bfs(array_labyrinth))
-    print(bfs(neighbourhood_array_labyrinth))
-    print(bfs(matrix_labyrinth))
-    print(bfs(incidents_matrix_labyrinth))
+    visited_nodes = []
+    while len(s) > 0:
+        c = s.pop()
+        visited_nodes.append(c)
+        if labyrinth.is_end(c):
+            return parents.path(c)
+        children = labyrinth.neighbours(c)
+        for child in children:
+            if child not in visited_nodes:
+                parents.push(child, c)
+                s.append(child)
+
+    return "Brak ścieżki do celu"
+
+
+if __name__ == '__main__':
+    neighbourhood_array_labyrinth = NeighbourhoodArrayGraph(neighbourhood_array_graph, 'h', 'f')
+    incidents_matrix_labyrinth = IncidentMatrixGraph(incidents_matrix_graph, 'h', 'f')
+    array_labyrinth = ArrayGraph(array_graph, 'h', 'f')
+    matrix_labyrinth = MatrixGraph(matrix_graph, 'h', 'f')
+
+    timer = time.time()
+
+    for i in range(100000):
+        xd = breadth_first_search(neighbourhood_array_labyrinth)
+        xd = breadth_first_search(incidents_matrix_labyrinth)
+        xd = breadth_first_search(array_labyrinth)
+        xd = breadth_first_search(matrix_labyrinth)
+
+    print("time:" + str(time.time() - timer))
+
+    # print(breadth_first_search(neighbourhood_array_labyrinth))
+    # print(depth_first_search(neighbourhood_array_labyrinth))
+    #
+    # print(breadth_first_search(incidents_matrix_labyrinth))
+    # print(depth_first_search(incidents_matrix_labyrinth))
+    #
+    # print(breadth_first_search(array_labyrinth))
+    # print(depth_first_search(array_labyrinth))
+    #
+    # print(breadth_first_search(matrix_labyrinth))
+    # print(depth_first_search(matrix_labyrinth))
+
