@@ -1,9 +1,13 @@
 import time
 
 from queue import Queue
+
+import networkx
+from matplotlib import pyplot as plt
+
 from Graph import NeighbourhoodArrayGraph, IncidentMatrixGraph, ArrayGraph, MatrixGraph
 from example_graphs import neighbourhood_array_graph, incidents_matrix_graph, matrix_graph, array_graph
-
+import networkx as nx
 
 class Parents:
     def __init__(self):
@@ -68,30 +72,28 @@ def depth_first_search(labyrinth):
 
 
 if __name__ == '__main__':
-    neighbourhood_array_labyrinth = NeighbourhoodArrayGraph(neighbourhood_array_graph, 'h', 'f')
-    incidents_matrix_labyrinth = IncidentMatrixGraph(incidents_matrix_graph, 'h', 'f')
-    array_labyrinth = ArrayGraph(array_graph, 'h', 'f')
-    matrix_labyrinth = MatrixGraph(matrix_graph, 'h', 'f')
+    max_graph_size = 100
+    times = []
+    for i in range(max_graph_size):
+        timers = []
+        for j in range(50):
+            nx_graph = networkx.fast_gnp_random_graph((i + 1), 1/(i + 1) * 3, seed=j)
+            graph = MatrixGraph(nx_graph)
+            timer = time.time()
+            breadth_first_search(graph)
+            timers.append(time.time() - timer)
+        times.append(sum(timers)/len(timers))
+        print(i)
+    plt.plot([x for x in range(max_graph_size)], times)
+    plt.show()
+    # graph = networkx.fast_gnp_random_graph(100, 0.2)
+    # antoni = MatrixGraph(graph)
 
-    timer = time.time()
 
-    for i in range(100000):
-        xd = breadth_first_search(neighbourhood_array_labyrinth)
-        xd = breadth_first_search(incidents_matrix_labyrinth)
-        xd = breadth_first_search(array_labyrinth)
-        xd = breadth_first_search(matrix_labyrinth)
 
-    print("time:" + str(time.time() - timer))
 
-    # print(breadth_first_search(neighbourhood_array_labyrinth))
-    # print(depth_first_search(neighbourhood_array_labyrinth))
-    #
-    # print(breadth_first_search(incidents_matrix_labyrinth))
-    # print(depth_first_search(incidents_matrix_labyrinth))
-    #
-    # print(breadth_first_search(array_labyrinth))
-    # print(depth_first_search(array_labyrinth))
-    #
-    # print(breadth_first_search(matrix_labyrinth))
-    # print(depth_first_search(matrix_labyrinth))
+
+
+
+
 
