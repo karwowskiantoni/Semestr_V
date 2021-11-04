@@ -1,4 +1,5 @@
 import networkx
+from networkx.linalg.graphmatrix import incidence_matrix
 
 
 class Graph:
@@ -15,8 +16,6 @@ class ArrayGraph(Graph):
     def __init__(self, nx_graph):
         nodes = [[x[0], x[1]] for x in nx_graph.edges]
         super().__init__(nodes, 0, len(nx_graph) - 1)
-        # networkx.draw(nx_graph, with_labels=True)
-        # plt.show()
 
     def neighbours(self, actual_node):
         neighbours = []
@@ -28,16 +27,18 @@ class ArrayGraph(Graph):
         return neighbours
 
 
-class NeighbourhoodArrayGraph(Graph):
+class NeighbourhoodListGraph(Graph):
     def __init__(self, nx_graph):
-        nodes = [[neighbor for neighbor in nx_graph.neighbors(i)] for i in range(len(nx_graph))]
+        nodes = [[neighbor for neighbor in nx_graph.neighbors(
+            i)] for i in range(len(nx_graph))]
+        # print(nodes)
         super().__init__(nodes, 0, len(nx_graph) - 1)
 
     def neighbours(self, actual_node):
         return self.nodes[actual_node]
 
 
-class MatrixGraph(Graph):
+class NeighbourhoodMatrixGraph(Graph):
     def __init__(self, nx_graph):
         nodes = networkx.to_numpy_array(nx_graph)
         # print(nodes)
@@ -53,6 +54,11 @@ class MatrixGraph(Graph):
 
 
 class IncidentMatrixGraph(Graph):
+    def __init__(self, nx_graph):
+        nodes = incidence_matrix(nx_graph).toarray()
+        # print(nodes)
+        super().__init__(nodes, 0, len(nx_graph) - 1)
+
     def connection(self, actual_node, connection_number):
         for i in range(len(self.nodes)):
             if self.nodes[i][connection_number] == 1 and i is not actual_node:
