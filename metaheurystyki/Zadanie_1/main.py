@@ -83,27 +83,28 @@ if __name__ == '__main__':
         inc_matrix_timers = []
         nei_list_timers = []
         for j in range(100):
-            nx_graph = networkx.fast_gnp_random_graph(
-                (i + 1), 1/(i + 1) * 3, seed=j)
+            nx_graph = networkx.fast_gnp_random_graph(i + 1, 1/(i + 1) * 3)
             arr_graph = ArrayGraph(nx_graph)
             adj_matrix_graph = NeighbourhoodMatrixGraph(nx_graph)
             inc_matrix_graph = IncidentMatrixGraph(nx_graph)
             nei_list_graph = NeighbourhoodListGraph(nx_graph)
-            timer = time.time()
-            breadth_first_search(arr_graph)
-            arr_timers.append(time.time() - timer)
 
             timer = time.time()
             depth_first_search(arr_graph)
+            arr_timers.append(time.time() - timer)
+
+            timer = time.time()
+            depth_first_search(adj_matrix_graph)
             adj_matrix_timers.append(time.time() - timer)
 
             timer = time.time()
-            breadth_first_search(inc_matrix_graph)
+            depth_first_search(inc_matrix_graph)
             inc_matrix_timers.append(time.time() - timer)
 
             timer = time.time()
-            depth_first_search(inc_matrix_graph)
+            depth_first_search(nei_list_graph)
             nei_list_timers.append(time.time() - timer)
+            
         arr_times.append(sum(arr_timers)/len(arr_timers))
         adj_matrix_times.append(sum(adj_matrix_timers)/len(adj_matrix_timers))
         inc_matrix_times.append(sum(inc_matrix_timers)/len(inc_matrix_timers))
@@ -113,4 +114,7 @@ if __name__ == '__main__':
     plt.plot([x for x in range(max_graph_size)], adj_matrix_times, 'g')
     plt.plot([x for x in range(max_graph_size)], inc_matrix_times, 'b')
     plt.plot([x for x in range(max_graph_size)], nei_list_times, 'm')
+    plt.legend(["array", "adjacency matrix", "incident matrix", "adjacency list"])
+    plt.xlabel("number of nodes")
+    plt.ylabel("average calculation time")
     plt.show()
