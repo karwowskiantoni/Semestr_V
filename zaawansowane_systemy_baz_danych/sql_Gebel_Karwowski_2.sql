@@ -37,11 +37,11 @@ from nieruchomosci
 join pierwotny_czynsz on nieruchomosci.nieruchomoscnr = pierwotny_czynsz.nieruchomoscNr;
 
 --3
-select nieruchomoscnr, sum(czynsz * MONTH(do_kiedy - od_kiedy)) as laczna_wartosc_czynszu 
+select nieruchomoscnr, sum(czynsz * DATEDIFF(MONTH, od_kiedy, do_kiedy)) as laczna_wartosc_czynszu 
 from wynajecia 
 group by nieruchomoscnr;
 --4
-with zarobki as (select nieruchomoscnr, sum(czynsz * MONTH(do_kiedy - od_kiedy)) as laczna_wartosc_czynszu 
+with zarobki as (select nieruchomoscnr, sum(czynsz * DATEDIFF(MONTH, od_kiedy, do_kiedy)) as laczna_wartosc_czynszu 
 from wynajecia 
 group by nieruchomoscnr)
 select biuronr, sum(laczna_wartosc_czynszu) * 0.3 as zarobki_biura
@@ -49,23 +49,29 @@ from nieruchomosci
 join zarobki on nieruchomosci.nieruchomoscnr= zarobki.nieruchomoscNr
 group by biuroNr;
 --5 a)
-select top(1) biura.miasto, count(umowanr) as ilosc_wynajmow
+with max_wynajmow as (
+select biura.miasto, count(umowanr) as ilosc_wynajmow
 from biura
 join nieruchomosci
 on nieruchomosci.biuroNr = biura.biuroNr
 join wynajecia
 on wynajecia.nieruchomoscNr = nieruchomosci.nieruchomoscnr
 group by biura.miasto
-order by ilosc_wynajmow DESC;
+)
+select *
+from max_wynajmow
+where ilosc_wynajmow = (select MAX(ilosc_wynajmow) from max_wynajmow)
+
+
 --5 b)
-with zarobki as (select nieruchomoscnr, sum(czynsz * MONTH(do_kiedy - od_kiedy)) as laczna_wartosc_czynszu 
+with zarobki_per_nieruchomosc as (select nieruchomoscnr, sum(czynsz * DATEDIFF(MONTH, od_kiedy, do_kiedy)) as laczna_wartosc_czynszu 
 from wynajecia 
-group by nieruchomoscnr)
-select top(1) nieruchomosci.miasto, sum(laczna_wartosc_czynszu) as zarobki_w_miescie
+group by nieruchomoscnr), zarobki_per_miasto as (
+select nieruchomosci.miasto, sum(laczna_wartosc_czynszu) as zarobki_w_miescie
 from nieruchomosci
-join zarobki on nieruchomosci.nieruchomoscnr= zarobki.nieruchomoscNr
-group by nieruchomosci.miasto
-order by zarobki_w_miescie DESC;
+join zarobki_per_nieruchomosc on nieruchomosci.nieruchomoscnr= zarobki_per_nieruchomosc.nieruchomoscNr
+group by nieruchomosci.miasto)
+select * from zarobki_per_miasto where zarobki_w_miescie = (select MAX(zarobki_w_miescie) from zarobki_per_miasto)
 --6
 select distinct wizyty.klientnr, wizyty.nieruchomoscnr 
 from wizyty
@@ -74,13 +80,13 @@ on wynajecia.klientnr = wizyty.klientnr
 AND wynajecia.nieruchomoscNr = wizyty.nieruchomoscnr 
 AND wizyty.data_wizyty < wynajecia.od_kiedy;
 --7
-with pierwsze_wynajmy as (select klientnr, min(od_kiedy) as pierwszy_wynajem 
+with pierwsze_wynajmy as (select klientnr, nieruchomoscNr, min(od_kiedy) as pierwszy_wynajem 
 from wynajecia
-group by klientnr)
+group by klientnr, nieruchomoscNr)
 select pierwsze_wynajmy.klientnr, count(wizyty.nieruchomoscnr)
 from pierwsze_wynajmy
 join wizyty
-on pierwsze_wynajmy.klientnr = wizyty.klientnr AND pierwszy_wynajem > data_wizyty
+on pierwsze_wynajmy.klientnr = wizyty.klientnr AND pierwszy_wynajem > data_wizyty AND pierwsze_wynajmy.nieruchomoscNr != wizyty.nieruchomoscnr
 group by pierwsze_wynajmy.klientnr;
 --8
 select distinct imie, nazwisko

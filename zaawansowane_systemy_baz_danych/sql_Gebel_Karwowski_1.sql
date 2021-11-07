@@ -1,4 +1,5 @@
-/*--1
+use narciarze
+--1
 select * from kraje;
 select * from skocznie;
 select * from trenerzy;
@@ -7,8 +8,9 @@ select * from zawodnicy;
 select * from zawody;
 
 --2
-select count(*) liczba_krajow_bez_skoczka from kraje
-join zawodnicy 
+select count(*) as liczba_krajow_bez_skoczka 
+from kraje
+left join zawodnicy 
 on zawodnicy.id_kraju = kraje.id_kraju
 where id_skoczka is null;
 
@@ -34,17 +36,18 @@ ON zawodnicy.id_skoczka = uczestnictwa_w_zawodach.id_skoczka
 GROUP BY zawodnicy.nazwisko;
 
 --6
-select uczestnictwa_w_zawodach.id_skoczka, skocznie.nazwa 
+select distinct uczestnictwa_w_zawodach.id_skoczka, skocznie.nazwa
 from uczestnictwa_w_zawodach 
 join zawody 
 on uczestnictwa_w_zawodach.id_zawodow = zawody.id_zawodow
 join skocznie 
-on zawody.id_skoczni = skocznie.id_skoczni;
+on zawody.id_skoczni = skocznie.id_skoczni
+order by id_skoczka
 
 --7
 select nazwisko, DATEDIFF(YEAR, data_ur,GETDATE()) as wiek 
 from zawodnicy 
-order by wiek;
+order by wiek desc;
 
 --8
 
@@ -84,7 +87,7 @@ left join zawodnik on zawodnicy.id_skoczka = zawodnik.id_skoczka;
 --13
 insert into trenerzy (
 id_kraju, imie_t, nazwisko_t, data_ur_t)
-values (7, 'Corby', 'Fisher', '1975-07-20');
+values ( (select id_kraju from kraje where kraj = 'USA'), 'Corby', 'Fisher', '1975-07-20');
 
 --14
 alter table zawodnicy
@@ -105,8 +108,7 @@ references trenerzy(id_trenera);
 --17
 update trenerzy 
 set data_ur_t = 
-(select DATEADD(YEAR, 5, MAX(zawodnicy.data_ur)) 
+(select DATEADD(YEAR, -5, MIN(zawodnicy.data_ur)) 
 from zawodnicy
 where zawodnicy.trener = trenerzy.id_trenera)
 where trenerzy.data_ur_t is NULL;
-*/
