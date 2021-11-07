@@ -70,5 +70,54 @@ END
 CLOSE kursor_1  
 DEALLOCATE kursor_1 
 --9
+use test_cwiczenia
+declare @nr int, @removed_counter int
+set @removed_counter = 0
+DECLARE kursor_2 CURSOR FOR 
+SELECT  nr_odd
+FROM oddzialy   
+
+OPEN kursor_2  
+FETCH NEXT FROM kursor_2 INTO @nr  
+
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+      if(@nr > 2) 
+		begin
+			delete from oddzialy where nr_odd = @nr
+			set @removed_counter = @removed_counter + 1
+		end
+	  FETCH NEXT FROM kursor_2 INTO @nr
+END 
+print 'Liczba usunietych rekordow to ' + cast(@removed_counter as varchar)
+CLOSE kursor_2  
+DEALLOCATE kursor_2 
 
 --10
+use test_cwiczenia
+declare @nr int, @nazwa varchar(30), @does_exist bit
+set @nazwa = 'psychiatria_3'
+set @does_exist = 0
+DECLARE kursor_3 CURSOR FOR 
+SELECT  nr_odd
+FROM oddzialy   
+
+OPEN kursor_3  
+FETCH NEXT FROM kursor_3 INTO @nr
+
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+		if(@nr = 3) 
+		begin 
+			set @does_exist = 1
+			update oddzialy
+			set nazwa_odd = @nazwa
+			where nr_odd = @nr
+		end
+      FETCH NEXT FROM kursor_3 INTO @nr
+END 
+
+CLOSE kursor_3  
+DEALLOCATE kursor_3 
+if(@does_exist = 0) insert into oddzialy(nr_odd, nazwa_odd)
+values (3, @nazwa)
