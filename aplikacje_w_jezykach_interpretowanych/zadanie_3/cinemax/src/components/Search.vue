@@ -43,7 +43,7 @@
       <div class="form-group">
         <label for="inputCast">Obsada</label>
         <input
-          v-on:change="cast = $event.target.value.split(', ')"
+          v-on:change="cast = $event.target.value == '' ? [] : $event.target.value.split(', ')"
           type="text"
           id="inputCast"
           class="form-control"
@@ -65,9 +65,6 @@
 <script>
 export default {
   name: "Search",
-  props: {
-    movies: Array,
-  },
   methods: {
     filterBy() {
       this.$emit("filter", {
@@ -80,10 +77,10 @@ export default {
   },
   data: function() {
     return {
-      title: String,
-      beginYear: Date,
-      endYear: Date,
-      cast: Array,
+      title: "",
+      beginYear: 0,
+      endYear: 0,
+      cast: [],
     };
   },
 };

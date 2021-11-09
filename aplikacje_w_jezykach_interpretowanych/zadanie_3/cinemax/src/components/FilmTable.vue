@@ -10,16 +10,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="i in length" :key="i">
-          <td>{{ movies[i].title }}</td>
-          <td>{{ movies[i].year }}</td>
+        <tr v-for="i in getLength()" :key="i">
+          <td>{{ movies[i - 1].title }}</td>
+          <td>{{ movies[i - 1].year }}</td>
           <td>
-            <div v-for="actor in movies[i].cast" :key="actor">
+            <div v-for="actor in movies[i - 1].cast" :key="actor">
               {{ actor }}
             </div>
           </td>
           <td>
-            <div v-for="genre in movies[i].genres" :key="genre">
+            <div v-for="genre in movies[i - 1].genres" :key="genre">
               {{ genre }}
             </div>
           </td>
@@ -40,6 +40,13 @@ export default {
   name: "FilmTable",
   props: {
     movies: Array,
+  },
+  methods: {
+    getLength() {
+      const newLength =
+        this.length > this.movies.length ? this.movies.length : this.length;
+      return newLength;
+    },
   },
 };
 </script>
