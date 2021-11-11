@@ -29,8 +29,7 @@ class ArrayGraph(Graph):
 
 class NeighbourhoodListGraph(Graph):
     def __init__(self, nx_graph):
-        nodes = [[neighbor for neighbor in nx_graph.neighbors(
-            i)] for i in range(len(nx_graph))]
+        nodes = [[neighbor for neighbor in nx_graph.neighbors(i)] for i in range(len(nx_graph))]
         # print(nodes)
         super().__init__(nodes, 0, len(nx_graph) - 1)
 

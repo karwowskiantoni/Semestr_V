@@ -1,12 +1,8 @@
 import time
-
 from queue import Queue
-
 import networkx
 from matplotlib import pyplot as plt
-
 from Graph import IncidentMatrixGraph, ArrayGraph, NeighbourhoodMatrixGraph, NeighbourhoodListGraph
-import networkx as nx
 
 
 class Parents:
