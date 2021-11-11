@@ -26,13 +26,13 @@ export default {
   },
   methods: {
     compareArrays(arrayOne, arrayTwo) {
-      let counter = 0;
+      let isPresent = false;
       arrayOne.forEach((arOneElement) => {
         if (arrayTwo.includes(arOneElement)) {
-          counter++;
+          isPresent = true;
         }
       });
-      return counter == 0 ? false : true;
+      return isPresent;
     },
     filterBy(pattern) {
       this.filteredMovies = _.filter(this.movies, (movie) => {
