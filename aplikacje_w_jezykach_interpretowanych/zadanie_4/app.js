@@ -1,11 +1,14 @@
+import "reflect-metadata";
+
 const express = require('express');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const indexRouter = require('./src/routes/index');
+const productsRouter = require('./src/routes/products');
 const app = express();
 
 app.use(express.json());
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/products', productsRouter);
+
 
 app.use(function (req, res) {
     res.statusCode = 404;
