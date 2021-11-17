@@ -1,7 +1,9 @@
 import express, { json, NextFunction, Request, Response } from "express";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
-import { User } from "./entity/User";
+import { createConnection, Entity } from "typeorm";
+import { Category } from "./entity/Category";
+import { Product } from "./entity/Product";
+import { Status } from "./entity/Status";
 
 createConnection()
   .then(async (connection) => {
@@ -10,39 +12,93 @@ createConnection()
     app.use(json());
 
     app.post(
-      "/user",
+      "/products",
       async (
         req: Request,
         res: Response,
         next: NextFunction
       ): Promise<void> => {
-        const user = new User();
-        user.firstName = req.body.firstName;
-        user.lastName = req.body.lastName;
-        user.age = req.body.age;
-
+        const product = new Product(
+          req.body.name,
+          req.body.description,
+          req.body.price,
+          req.body.weight,
+          req.body.category
+        );
         console.log("Inserting a new user into the database...");
-        await connection.manager.save(user);
-        console.log("Saved a new user with id: " + user.id);
+        await connection.manager.save(product);
+        console.log("Saved a new user with id: " + product.id);
 
-        res.status(200).json({ userId: user.id });
+        res.status(200).json({ productId: product.id });
 
         next();
       }
     );
 
     app.get(
-      "/user",
+      "/products",
       async (
         req: Request,
         res: Response,
         next: NextFunction
       ): Promise<void> => {
-        console.log("Loading users from the database...");
-        const users = await connection.manager.find(User);
-        console.log("Loaded users: ", users);
+        console.log("Loading products from the database...");
+        const products = await connection.manager.find(Product);
+        console.log("Loaded users: ", products);
 
-        res.json(users);
+        res.json(products);
+
+        next();
+      }
+    );
+
+    app.get(
+      "/products/:prodId",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        console.log("Loading product from the database...");
+        const wantedId: number = parseInt(req.params.prodId);
+        const product = await connection.manager.findOne(Product, {
+          id: wantedId,
+        });
+        console.log("Product with id ", wantedId , product);
+
+        res.json(product);
+
+        next();
+      }
+    );
+
+    app.get(
+      "/categories",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const categories = Object.values(Category);
+        console.log("Available categories: ", categories);
+
+        res.json(categories);
+
+        next();
+      }
+    );
+
+    app.get(
+      "/statuses",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const statuses = Object.values(Status);
+        console.log("Available statuses: ", statuses);
+
+        res.json(statuses);
 
         next();
       }
