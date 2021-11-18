@@ -49,7 +49,7 @@ def marry_individuals(individuals):
 def new_generation(pairs):
     new_individuals = []
     for pair in pairs:
-        new_individuals.append(cross_genes(pairs, "xd, losowa liczba"))
+        new_individuals.append(cross_genes(pair, "xd, losowa liczba"))
     return new_individuals
 
 
@@ -62,6 +62,21 @@ def mutate_population(individuals):
 def cross_genes(pair, pivot):
     children = []
     return children
+
+
+def algorithm(population_size, number_of_iterations):
+
+    individuals = []
+    for i in range(population_size):
+        individuals.append(random_individual())
+
+    for i in range(number_of_iterations):
+        individuals = roulette_selection(individuals)
+        pairs = marry_individuals(individuals)
+        individuals = new_generation(pairs)
+        individuals = mutate_population(individuals)
+    return  individuals
+
 
 
 if __name__ == '__main__':
