@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Category } from "./Category";
+import { OrderProduct } from "./OrderProduct";
 
 @Entity()
 export class Product {
@@ -36,4 +37,7 @@ export class Product {
 
   @Column({ type: "enum", enum: Category, default: Category.UNKNOWN })
   category: Category;
+
+  @OneToMany(() => OrderProduct, (po) => po.order)
+  orderConnection: Promise<OrderProduct[]>;
 }

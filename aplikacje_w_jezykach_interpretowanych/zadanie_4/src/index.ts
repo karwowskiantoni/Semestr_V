@@ -1,7 +1,10 @@
+import { Resolver } from "dns";
 import express, { json, NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { createConnection, Entity } from "typeorm";
 import { Category } from "./entity/Category";
+import { Order } from "./entity/Order";
+import { OrderProduct } from "./entity/OrderProduct";
 import { Product } from "./entity/Product";
 import { Status } from "./entity/Status";
 
@@ -25,9 +28,9 @@ createConnection()
           req.body.weight,
           req.body.category
         );
-        console.log("Inserting a new user into the database...");
+        console.log("Inserting a new product into the database...");
         await connection.manager.save(product);
-        console.log("Saved a new user with id: " + product.id);
+        console.log("Saved a new product with id: " + product.id);
 
         res.status(200).json({ productId: product.id });
 
@@ -64,7 +67,7 @@ createConnection()
         const product = await connection.manager.findOne(Product, {
           id: wantedId,
         });
-        console.log("Product with id ", wantedId , product);
+        console.log("Product with id ", wantedId, product);
 
         res.json(product);
 
@@ -100,6 +103,42 @@ createConnection()
 
         res.json(statuses);
 
+        next();
+      }
+    );
+
+    app.post(
+      "/orders",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const order = new Order(
+          req.body.status,
+          req.body.userName,
+          req.body.mail,
+          req.body.phone,
+          req.body.confirmDate
+        );
+        console.log("Inserting a new order into the database...");
+        await connection.manager.save(order);
+        console.log("Saved a new order with id: " + order.id);
+
+        const orderedProducts = new Array<OrderProduct>();
+        for (let i = 0; i < req.body.products.length; i++) {
+          orderedProducts[i] = new OrderProduct(
+            order.id,
+            req.body.products[i].productId,
+            req.body.products[i].quantity
+          );
+        }
+        console.log(orderedProducts);
+        for (let i = 0; i < orderedProducts.length; i++) {
+          await connection.manager.save(orderedProducts[i]);
+        }
+
+        res.json(orderedProducts);
         next();
       }
     );
