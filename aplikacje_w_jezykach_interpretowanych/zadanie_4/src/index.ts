@@ -13,6 +13,7 @@ createConnection()
 
     app.use(json());
 
+    //PRODUCTS
     app.post(
       "/products",
       async (
@@ -21,19 +22,33 @@ createConnection()
         next: NextFunction
       ): Promise<void> => {
         try {
-          const product = new Product(
-            req.body.name,
-            req.body.description,
-            req.body.price,
-            req.body.weight,
-            req.body.category
-          );
-          console.log("Inserting a new product into the database...");
-          await connection.manager.save(product);
-          console.log("Saved a new product with id: " + product.id);
+          if (
+            req.body.price <= 0 ||
+            req.body.weight <= 0 ||
+            req.body.description === "" ||
+            req.body.name === ""
+          ) {
+            res
+              .status(400)
+              .json(
+                "Error occured. Possible reasons: 1.Empty name or description. 2.Price and weight are sub or equal zero"
+              );
+            next();
+          } else {
+            const product = new Product(
+              req.body.name,
+              req.body.description,
+              req.body.price,
+              req.body.weight,
+              req.body.category
+            );
+            console.log("Inserting a new product into the database...");
+            await connection.manager.save(product);
+            console.log("Saved a new product with id: " + product.id);
 
-          res.status(200).json({ productId: product.id });
-          next();
+            res.status(200).json(product);
+            next();
+          }
         } catch (e) {
           res.status(400).json(e);
           next();
@@ -51,10 +66,13 @@ createConnection()
         console.log("Loading products from the database...");
         const products = await connection.manager.find(Product);
         console.log("Loaded users: ", products);
-
-        res.json(products);
-
-        next();
+        if (products) {
+          res.json(products);
+          next();
+        } else {
+          res.status(404).json("No products in database");
+          next();
+        }
       }
     );
 
@@ -71,10 +89,13 @@ createConnection()
           id: wantedId,
         });
         console.log("Product with id ", wantedId, product);
-
-        res.json(product);
-
-        next();
+        if (product) {
+          res.json(product);
+          next();
+        } else {
+          res.status(404).json("No product with given id");
+          next();
+        }
       }
     );
 
@@ -89,27 +110,38 @@ createConnection()
         const product = await connection.manager.findOne(Product, {
           id: wantedId,
         });
-        console.log("before update", product);
-        req.body.name ? (product.name = req.body.name) : undefined;
-        req.body.description
-          ? (product.description = req.body.description)
-          : undefined;
-        req.body.price ? (product.price = req.body.price) : undefined;
-        req.body.weight ? (product.weight = req.body.weight) : undefined;
-        console.log(req.body.category);
-        if (req.body.category) {
-          product.category = Object.values(Category).includes(req.body.category)
-            ? req.body.category
-            : Category.UNKNOWN;
+        if (product) {
+          req.body.name && req.body.name !== ""
+            ? (product.name = req.body.name)
+            : undefined;
+          req.body.description && req.body.description !== ""
+            ? (product.description = req.body.description)
+            : undefined;
+          req.body.price && req.body.price >= 0
+            ? (product.price = req.body.price)
+            : undefined;
+          req.body.weight && req.body.weight >= 0
+            ? (product.weight = req.body.weight)
+            : undefined;
+          if (req.body.category) {
+            product.category = Object.values(Category).includes(
+              req.body.category
+            )
+              ? req.body.category
+              : Category.UNKNOWN;
+          }
+          await connection.manager.save(product);
+
+          res.json(product);
+          next();
+        } else {
+          res.status(404).json("No product with given id");
+          next();
         }
-        console.log("after update", product);
-        await connection.manager.save(product);
-
-        res.json(product);
-
-        next();
       }
     );
+
+// CATEGORIES
 
     app.get(
       "/categories",
@@ -127,6 +159,8 @@ createConnection()
       }
     );
 
+    // STATUSES
+
     app.get(
       "/statuses",
       async (
@@ -142,6 +176,8 @@ createConnection()
         next();
       }
     );
+
+// ORDERS
 
     app.post(
       "/orders",
