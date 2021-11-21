@@ -15,7 +15,7 @@ export class Product {
     this.description = description;
     this.price = price;
     this.weight = weight;
-    this.category = Object.values(Product).includes(category)
+    this.category = Object.values(Category).includes(category)
       ? category
       : Category.UNKNOWN;
   }

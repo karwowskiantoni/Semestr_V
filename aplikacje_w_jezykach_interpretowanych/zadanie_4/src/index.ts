@@ -1,4 +1,3 @@
-import { Resolver } from "dns";
 import express, { json, NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { createConnection, Entity } from "typeorm";
@@ -21,20 +20,24 @@ createConnection()
         res: Response,
         next: NextFunction
       ): Promise<void> => {
-        const product = new Product(
-          req.body.name,
-          req.body.description,
-          req.body.price,
-          req.body.weight,
-          req.body.category
-        );
-        console.log("Inserting a new product into the database...");
-        await connection.manager.save(product);
-        console.log("Saved a new product with id: " + product.id);
+        try {
+          const product = new Product(
+            req.body.name,
+            req.body.description,
+            req.body.price,
+            req.body.weight,
+            req.body.category
+          );
+          console.log("Inserting a new product into the database...");
+          await connection.manager.save(product);
+          console.log("Saved a new product with id: " + product.id);
 
-        res.status(200).json({ productId: product.id });
-
-        next();
+          res.status(200).json({ productId: product.id });
+          next();
+        } catch (e) {
+          res.status(400).json(e);
+          next();
+        }
       }
     );
 
@@ -68,6 +71,39 @@ createConnection()
           id: wantedId,
         });
         console.log("Product with id ", wantedId, product);
+
+        res.json(product);
+
+        next();
+      }
+    );
+
+    app.put(
+      "/products/:prodId",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const wantedId: number = parseInt(req.params.prodId);
+        const product = await connection.manager.findOne(Product, {
+          id: wantedId,
+        });
+        console.log("before update", product);
+        req.body.name ? (product.name = req.body.name) : undefined;
+        req.body.description
+          ? (product.description = req.body.description)
+          : undefined;
+        req.body.price ? (product.price = req.body.price) : undefined;
+        req.body.weight ? (product.weight = req.body.weight) : undefined;
+        console.log(req.body.category);
+        if (req.body.category) {
+          product.category = Object.values(Category).includes(req.body.category)
+            ? req.body.category
+            : Category.UNKNOWN;
+        }
+        console.log("after update", product);
+        await connection.manager.save(product);
 
         res.json(product);
 
@@ -139,6 +175,77 @@ createConnection()
         }
 
         res.json(orderedProducts);
+        next();
+      }
+    );
+
+    app.get(
+      "/orders",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const orders = await connection.manager.find(Order);
+
+        for (let i = 0; i < orders.length; i++) {
+          const products = await connection.manager.find(OrderProduct, {
+            where: { orderId: orders[i].id },
+          });
+          products.forEach((product) => delete product.orderId);
+          orders[i].products = products;
+        }
+
+        res.json(orders);
+
+        next();
+      }
+    );
+
+    app.put(
+      "/orders/:ordId",
+      async (req: Request, res: Response, next: NextFunction) => {
+        const wantedId: number = parseInt(req.params.ordId);
+        const order = await connection.manager.findOne(Order, {
+          id: wantedId,
+        });
+        console.log("before update", order);
+
+        if (req.body.status) {
+          if (Object.values(Status).includes(req.body.status)) {
+            await connection.manager.save(order);
+            console.log("after update", order);
+            res.json(order);
+            next();
+          } else {
+            res.status(400).json("No such status");
+            next();
+          }
+        } else {
+          res.status(400).json("Empty status");
+          next();
+        }
+      }
+    );
+
+    app.get(
+      "/orders/:status",
+      async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<void> => {
+        const orders = await connection.manager.find(Order, {
+          where: { status: req.params.status },
+        });
+        for (let i = 0; i < orders.length; i++) {
+          const products = await connection.manager.find(OrderProduct, {
+            where: { orderId: orders[i].id },
+          });
+          products.forEach((product) => delete product.orderId);
+          orders[i].products = products;
+        }
+        res.json(orders);
         next();
       }
     );

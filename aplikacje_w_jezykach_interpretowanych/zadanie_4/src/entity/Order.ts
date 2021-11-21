@@ -36,6 +36,8 @@ export class Order {
   @Column()
   phoneNumber: string;
 
+  products: OrderProduct[];
+
   @OneToMany(() => OrderProduct, (po) => po.product)
   productConnection: Promise<OrderProduct[]>;
 }
