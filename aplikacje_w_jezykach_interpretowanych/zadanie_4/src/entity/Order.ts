@@ -21,7 +21,7 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   confirmDate?: Date;
 
   @Column({ type: "enum", enum: Status, default: Status.UNCONFIRMED })

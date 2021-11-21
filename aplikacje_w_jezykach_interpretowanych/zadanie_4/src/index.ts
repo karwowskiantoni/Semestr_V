@@ -5,7 +5,7 @@ import { Category } from "./entity/Category";
 import { Order } from "./entity/Order";
 import { OrderProduct } from "./entity/OrderProduct";
 import { Product } from "./entity/Product";
-import { Status } from "./entity/Status";
+import { possibleTransitions, Status } from "./entity/Status";
 
 createConnection()
   .then(async (connection) => {
@@ -21,36 +21,33 @@ createConnection()
         res: Response,
         next: NextFunction
       ): Promise<void> => {
-        try {
-          if (
-            req.body.price <= 0 ||
-            req.body.weight <= 0 ||
-            req.body.description === "" ||
-            req.body.name === ""
-          ) {
-            res
-              .status(400)
-              .json(
-                "Error occured. Possible reasons: 1.Empty name or description. 2.Price and weight are sub or equal zero"
-              );
-            next();
-          } else {
-            const product = new Product(
-              req.body.name,
-              req.body.description,
-              req.body.price,
-              req.body.weight,
-              req.body.category
+        if (
+          req.body.price <= 0 ||
+          req.body.weight <= 0 ||
+          isNaN(req.body.price) ||
+          isNaN(req.body.weight) ||
+          req.body.description === "" ||
+          req.body.name === ""
+        ) {
+          res
+            .status(400)
+            .json(
+              "Error occured. Possible reasons: 1.Empty name or description. 2.Price and weight are sub or equal zero"
             );
-            console.log("Inserting a new product into the database...");
-            await connection.manager.save(product);
-            console.log("Saved a new product with id: " + product.id);
+          next();
+        } else {
+          const product = new Product(
+            req.body.name,
+            req.body.description,
+            req.body.price,
+            req.body.weight,
+            req.body.category
+          );
+          console.log("Inserting a new product into the database...");
+          await connection.manager.save(product);
+          console.log("Saved a new product with id: " + product.id);
 
-            res.status(200).json(product);
-            next();
-          }
-        } catch (e) {
-          res.status(400).json(e);
+          res.status(200).json(product);
           next();
         }
       }
@@ -141,7 +138,7 @@ createConnection()
       }
     );
 
-// CATEGORIES
+    // CATEGORIES
 
     app.get(
       "/categories",
@@ -177,7 +174,7 @@ createConnection()
       }
     );
 
-// ORDERS
+    // ORDERS
 
     app.post(
       "/orders",
@@ -187,16 +184,11 @@ createConnection()
         next: NextFunction
       ): Promise<void> => {
         const order = new Order(
-          req.body.status,
+          Status.UNCONFIRMED,
           req.body.userName,
           req.body.mail,
-          req.body.phone,
-          req.body.confirmDate
+          req.body.phone
         );
-        console.log("Inserting a new order into the database...");
-        await connection.manager.save(order);
-        console.log("Saved a new order with id: " + order.id);
-
         const orderedProducts = new Array<OrderProduct>();
         for (let i = 0; i < req.body.products.length; i++) {
           orderedProducts[i] = new OrderProduct(
@@ -205,13 +197,55 @@ createConnection()
             req.body.products[i].quantity
           );
         }
-        console.log(orderedProducts);
-        for (let i = 0; i < orderedProducts.length; i++) {
-          await connection.manager.save(orderedProducts[i]);
-        }
 
-        res.json(orderedProducts);
-        next();
+        for (let i = 0; i < orderedProducts.length; i++) {
+          if (
+            orderedProducts[i].quantity <= 0 ||
+            !isNaN(orderedProducts[i].quantity)
+          ) {
+            res
+              .status(400)
+              .json(
+                "Quantities of products are sub or equal zero or not a number"
+              );
+            next();
+            return;
+          }
+          const prod = await connection.manager.find(Product, {
+            where: { id: orderedProducts[i].productId },
+          });
+          if (prod.length === 0) {
+            res
+              .status(400)
+              .json("No product with given id" + orderedProducts[i].productId);
+            next();
+            return;
+          }
+        }
+        if (
+          req.body.userName === "" ||
+          req.body.mail === "" ||
+          req.body.phone === "" ||
+          req.body.products.length === 0
+        ) {
+          res.status(400).json("Empty user data or no products given");
+          next();
+        } else if (!req.body.phone.match(/^[0-9]+$/)) {
+          res.status(400).json("Phone number contains not only digits");
+          next();
+        } else {
+          console.log("Inserting a new order into the database...");
+          await connection.manager.save(order);
+          console.log("Saved a new order with id: " + order.id);
+
+          console.log(orderedProducts);
+          for (let i = 0; i < orderedProducts.length; i++) {
+            await connection.manager.save(orderedProducts[i]);
+          }
+
+          res.json(orderedProducts);
+          next();
+        }
       }
     );
 
@@ -245,21 +279,35 @@ createConnection()
         const order = await connection.manager.findOne(Order, {
           id: wantedId,
         });
-        console.log("before update", order);
-
-        if (req.body.status) {
-          if (Object.values(Status).includes(req.body.status)) {
-            await connection.manager.save(order);
-            console.log("after update", order);
-            res.json(order);
-            next();
+        if (!order) {
+          res.status(404).json("No order with given id");
+          next();
+        } else if (order.status === Status.CANCELLED) {
+          res.status(400).json("Cannot change status of cancelled order");
+          next();
+        } else {
+          console.log("before update", order);
+          if (req.body.status) {
+            if (
+              Object.values(Status).includes(req.body.status) &&
+              possibleTransitions(order.status, req.body.status)
+            ) {
+              if (req.body.status === Status.CONFIRMED) {
+                order.confirmDate = new Date();
+              }
+              order.status = req.body.status;
+              await connection.manager.save(order);
+              console.log("after update", order);
+              res.json(order);
+              next();
+            } else {
+              res.status(400).json("No such status");
+              next();
+            }
           } else {
-            res.status(400).json("No such status");
+            res.status(400).json("Empty status");
             next();
           }
-        } else {
-          res.status(400).json("Empty status");
-          next();
         }
       }
     );
@@ -274,15 +322,20 @@ createConnection()
         const orders = await connection.manager.find(Order, {
           where: { status: req.params.status },
         });
-        for (let i = 0; i < orders.length; i++) {
-          const products = await connection.manager.find(OrderProduct, {
-            where: { orderId: orders[i].id },
-          });
-          products.forEach((product) => delete product.orderId);
-          orders[i].products = products;
+        if (orders.length === 0) {
+          res.status(404).json("No orders with given status");
+          next();
+        } else {
+          for (let i = 0; i < orders.length; i++) {
+            const products = await connection.manager.find(OrderProduct, {
+              where: { orderId: orders[i].id },
+            });
+            products.forEach((product) => delete product.orderId);
+            orders[i].products = products;
+          }
+          res.json(orders);
+          next();
         }
-        res.json(orders);
-        next();
       }
     );
 
