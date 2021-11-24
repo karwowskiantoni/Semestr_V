@@ -1,7 +1,8 @@
 import random
 
-from data import DATA, BAG_MAX_WEIGHT
 from bitarray.util import urandom
+
+from data import DATA, BAG_MAX_WEIGHT
 
 
 # generate individual with random genes
@@ -9,10 +10,18 @@ def random_individual():
     return urandom(26)
 
 
+def calculate_population_adaptation(individuals):
+    sum = 0
+    for individual in individuals:
+        sum += calculate_adaptation(individual)
+    return sum
+
+
 # return adaptation value of one individual
 def calculate_adaptation(individual):
     if len(individual) != len(DATA):
-        return "podano osobnika o błędnej długości: " + str(len(individual)) + " wymagana ilość genów: " + str(len(DATA))
+        return "podano osobnika o błędnej długości: " + str(len(individual)) + " wymagana ilość genów: " + str(
+            len(DATA))
     weight_sum = 0
     value_sum = 0
     for i in range(len(individual)):
@@ -26,113 +35,90 @@ def calculate_adaptation(individual):
 
 
 # return individuals selected for breeding
-def roulette_selection(population, crossing_probability):
-    sum_of_adaptations = 0
-    for individual in population:
-        sum_of_adaptations += calculate_adaptation(individual)
+def roulette_selection(population):
+    adaptation_sum = calculate_population_adaptation(population)
+    if adaptation_sum == 0:
+        return population
     probability_table = {}
     for i in range(len(population)):
-        probability_table[i] = calculate_adaptation(population[i])/sum_of_adaptations
-    return random.choices(list(probability_table.keys()), weights=list(probability_table.values()), k=crossing_probability)
+        probability_table[i] = calculate_adaptation(population[i]) / adaptation_sum
+    indexes = random.choices(list(probability_table.keys()),
+                             weights=list(probability_table.values()),
+                             k=len(population))
+    return [population[index] for index in indexes]
+
+
+# return individuals selected for breeding
+def elite_selection(population):
+    ranking_table = {}
+    for i in range(len(population)):
+        ranking_table[i] = calculate_adaptation(population[i])
+    indexes = sorted(ranking_table.items(), key=lambda item: -item[1])
+    gowno = [population[indexes[i][0]] for i in range(int(len(population)/2))]
+    return gowno + gowno
+
+
+def select_parents(individuals, crossing_probability, is_roulette):
+    random.shuffle(individuals)
+    number_to_selection = int(crossing_probability * len(individuals))
+    individuals_to_selection = individuals[:number_to_selection]
+    other_individuals = individuals[number_to_selection:]
+    if is_roulette:
+        return other_individuals + roulette_selection(individuals_to_selection)
+    else:
+        return other_individuals + elite_selection(individuals_to_selection)
 
 
 # generate 2 children with crossed genes based on 2 parents
-# todo
-def cross_genes(pair, pivot):
-    first_pair_fhalf = pair[0][:pivot]
-    first_pair_shalf = pair[0][pivot:]
-    second_pair_fhalf = pair[1][:pivot]
-    second_pair_shalf = pair[1][pivot:]
-
-    first_child = first_pair_fhalf + second_pair_shalf
-    second_child = second_pair_fhalf + first_pair_shalf
-
-    return [first_child, second_child]
-
-# return individuals selected for breeding
-# todo
-def tournament_selection(individuals):
-    new_individuals = []
-    return new_individuals
-
-
-# return individuals selected for breeding
-# todo
-def ranking_selection(individuals):
-    new_individuals = []
-    return new_individuals
+def cross_genes(pair):
+    pivot = random.randint(1, 24)
+    return [pair[0][:pivot] + pair[1][pivot:], pair[1][:pivot] + pair[0][pivot:]]
 
 
 # return random pairs from population
-# ready ?
-def make_pairs(individuals):
+def marry_individuals(individuals):
     pairs = []
     random.shuffle(individuals)
 
-    if len(individuals) % 2 == 0:
-        i = 0
-        while i < len(individuals):
-            pairs.append([individuals[i], individuals[i + 1]])
-            i += 2
-    else:
-        i = 0
-        while i < len(individuals):
-            if len(individuals) - i == 1:
-                pairs.append([individuals[i], individuals[0]])
-                return pairs
-            else:
-                pairs.append([individuals[i], individuals[i + 1]])
-                i += 2
+    i = 0
+    while i < len(individuals) - 1:
+        pairs.append([individuals[i], individuals[i + 1]])
+        i += 2
+
+    if len(individuals) % 2 == 1:
+        pairs.append([individuals[len(individuals) - 1], individuals[0]])
     return pairs
 
 
 # return new population based on pairs of parents
-# todo
 def new_generation(pairs):
     new_individuals = []
     for pair in pairs:
-        new_individuals.append(cross_genes(pair, "parameter should be there"))  # there should be something like flatmap TSOO
+        new_individuals += cross_genes(pair)
     return new_individuals
 
 
 # return population with random genes changed
-# todo
-def mutate_population(individuals):
+def mutate_population(individuals, probability):
+    random.shuffle(individuals)
+    for i in range(int(probability * len(individuals))):
+        individuals[i].invert(random.randint(0, 25))
     return individuals
 
 
 # return final population generated by genetic algorithm
-# ready?
 # todo things to be parametrized
-# 1.Pivot/Number of pivots
+# 1.Number of pivots
 # 2.Selection algorithm
-# 3.Mutation ratio
-# 4.Population size DONE
 # 5.Stop condition (number of iterations/minimum adaptation/adaptation change)
-
-def genetic_algorithm(population_size, crossing_probability):
-
-    population = []
+def genetic_algorithm(population_size, number_of_iterations, crossing_probability, mutating_probability, isRoulette):
+    individuals = []
     for i in range(population_size):
-        population.append(random_individual())
-    # chosen_individuals = random.sample(population, crossing_probability)
-    #loop
-    parents_indices = roulette_selection(population, crossing_probability)
-    parents = []
-    for parent_index in parents_indices:
-        parents.append(population[parent_index])
-    print(parents)
-    #crossing done
-    #mutation todo
+        individuals.append(random_individual())
 
-    # individuals = []
-    # for i in range(population_size):
-    #     individuals.append(random_individual())
-    #
-    # for i in range(number_of_iterations):
-    #     individuals = roulette_selection(individuals)  # choose next parents
-    #     pairs = marry_individuals(individuals)  # choose pairs from parents
-    #     individuals = new_generation(pairs)  # generate new population based on parents
-    #     individuals = mutate_population(individuals)  # mutate population
-
-
+    for i in range(number_of_iterations):
+        individuals = select_parents(individuals, crossing_probability, isRoulette)  # choose next parents
+        pairs = marry_individuals(individuals)  # choose pairs from parents
+        individuals = new_generation(pairs)  # generate new population based on parents
+        individuals = mutate_population(individuals, mutating_probability)  # mutate population
+    return individuals
