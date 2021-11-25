@@ -108,7 +108,15 @@ createConnection()
         const product = await connection.manager.findOne(Product, {
           id: wantedId,
         });
-        if (product) {
+        if (
+          (req.body.name && req.body.name !== "") ||
+          (req.body.description && req.body.description !== "") ||
+          (req.body.price && req.body.price >= 0) ||
+          (req.body.weight && req.body.weight >= 0)
+        ) {
+          res.status(400).json("Given wrong values to change");
+          next();
+        } else if (product) {
           req.body.name && req.body.name !== ""
             ? (product.name = req.body.name)
             : undefined;
