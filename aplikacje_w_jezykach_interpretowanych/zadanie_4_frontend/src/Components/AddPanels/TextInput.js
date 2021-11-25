@@ -3,7 +3,7 @@ import {Col, Form} from "react-bootstrap";
 export function TextInput({title, placeholder, value, setValue}) {
     return (
         <Form.Group
-            style={{minWidth: 250}}
+            style={{minWidth: 330}}
             as={Col} md="2" controlId={title}>
             <Form.Label>{title}</Form.Label>
             <Form.Control

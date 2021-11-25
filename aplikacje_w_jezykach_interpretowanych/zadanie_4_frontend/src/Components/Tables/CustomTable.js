@@ -1,11 +1,12 @@
 import {Table} from "react-bootstrap";
 import {CustomRow} from "./CustomRow";
 import {useEffect, useState} from "react";
+import {process} from "./CustomRow";
 
 export function CustomTable({head = [], data, bottom = [], setEditModal}) {
 
     const [body, setBody] = useState([]);
-    const [sortedBy, setSortedBy] = useState("tytuł");
+    const [sortedBy, setSortedBy] = useState("name");
     useEffect(() => {
             if (sortedBy.includes("!")) {
                 setBody([...data.sort((a, b) => comparator(b, a, head.findIndex((element) => sortedBy.includes(element)))).slice(0, 200)])
@@ -16,7 +17,7 @@ export function CustomTable({head = [], data, bottom = [], setEditModal}) {
     );
 
     function comparator(a, b, index) {
-        return a[index].localeCompare(b[index])
+        return String(process(a)[index]).localeCompare(String(process(b)[index]))
     }
 
     return (

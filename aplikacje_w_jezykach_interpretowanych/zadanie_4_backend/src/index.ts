@@ -1,6 +1,6 @@
 import express, { json, NextFunction, Request, Response } from "express";
 import "reflect-metadata";
-import { createConnection, Entity } from "typeorm";
+import { createConnection } from "typeorm";
 import { Category } from "./entity/Category";
 import { Order } from "./entity/Order";
 import { OrderProduct } from "./entity/OrderProduct";
@@ -10,9 +10,10 @@ import { possibleTransitions, Status } from "./entity/Status";
 createConnection()
   .then(async (connection) => {
     const app = express();
+    const cors = require('cors')
 
     app.use(json());
-
+    app.use(cors())
     //PRODUCTS
     app.post(
       "/products",
