@@ -2,7 +2,7 @@ import {Button, Form, Modal, Row} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {TextInput} from "../AddPanels/TextInput";
 
-export function EditModal({URL, info, setInfo, setShouldReload}) {
+export function EditModal({URL, info, setInfo, setShouldReload, setWarningModal}) {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -30,9 +30,14 @@ export function EditModal({URL, info, setInfo, setShouldReload}) {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
-        }).then(response => {
-            setShouldReload(Math.random())
-            switchVisibility();
+        }).then(async response => {
+            if (response.ok) {
+                setShouldReload(Math.random())
+                switchVisibility();
+            } else {
+                response = await response.text()
+                setWarningModal({open: true, message: response})
+            }
         })
     }
 

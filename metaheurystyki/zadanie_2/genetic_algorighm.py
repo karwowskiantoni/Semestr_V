@@ -28,6 +28,14 @@ def calculate_population_adaptation_max(population):
             max = calculate_adaptation(individual)
     return max
 
+
+def calculate_population_adaptation_min(population):
+    min = BAG_MAX_VALUE
+    for individual in population:
+        if min > calculate_adaptation(individual):
+            min = calculate_adaptation(individual)
+    return min
+
 # return adaptation value of one individual
 def calculate_adaptation(individual):
     weight_sum = 0

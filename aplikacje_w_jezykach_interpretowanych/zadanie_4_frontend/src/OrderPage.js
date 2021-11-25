@@ -8,7 +8,7 @@ import {WarningModal} from "./Components/Modals/WarningModal";
 import {CustomToast} from "./Components/Modals/CustomToast";
 import {EditModal} from "./Components/Modals/EditModal";
 
-export function ProductPage() {
+export function OrderPage() {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [shouldReload, setShouldReload] = useState(0);
@@ -28,7 +28,7 @@ export function ProductPage() {
     const URL = "http://localhost:3000"
     useEffect(() => {
         async function fetchAPI() {
-            let response = await fetch(URL + "/products");
+            let response = await fetch(URL + "/orders");
             let json = await response.json();
             setProducts(json);
             setFilteredProducts(json);
