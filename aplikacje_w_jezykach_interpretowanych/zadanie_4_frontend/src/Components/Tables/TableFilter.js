@@ -25,7 +25,7 @@ export function TableFilter({data, setFilteredData}) {
                     }
                 }}
                              onKeyPress={event => event.key === 'Enter' && event.preventDefault()}
-                             placeholder={"wyszukaj"}/>
+                             placeholder={"search..."}/>
             </FormGroup>
         </Form>
     );

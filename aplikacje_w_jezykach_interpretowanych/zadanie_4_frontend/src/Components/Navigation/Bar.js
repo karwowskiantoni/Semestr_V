@@ -4,43 +4,38 @@ import {ToCsvButton} from "./ToCsvButton";
 import {FromCsvButton} from "./FromCsvButton";
 import React from "react";
 
-export function Bar({URL, setShouldReload, size, newBookMode, setNewBookMode}) {
+export function Bar({URL, setShouldReload, size, newProductMode, setNewProductMode}) {
 
     return (
         <Navbar bg={"dark"} variant={"dark"} fixed="top">
-            <Navbar.Brand style={{marginLeft: '1vw'}} bg="light">LIBRARY</Navbar.Brand>
+            <Navbar.Brand style={{marginLeft: '1vw'}} bg="light">AJI EXERCISE 4</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <NavDropdown title={"menu"} id="basic-nav-dropdown">
                         <NavDropdown.Header>navigation</NavDropdown.Header>
-                        <Link to="/">
-                            <Button variant={"light"} style={{minWidth: 300}} onClick={() => {
-                            }}>books</Button>
+                        <Link to="/store">
+                            <Button variant={"light"} style={{minWidth: 300}}>store</Button>
+                        </Link>
+                        <Link to="/order">
+                            <Button variant={"light"} style={{minWidth: 300}}>my order</Button>
                         </Link>
                         <NavDropdown.Divider/>
                         <NavDropdown.Header>settings</NavDropdown.Header>
-                        <ToCsvButton URL={URL}/>
-                        <FromCsvButton URL={URL} setShouldReload={setShouldReload}/>
+
+                        <Button
+                            onClick={() => setNewProductMode(prevState => !prevState)}
+                            style={{minWidth: 300}}
+                            variant={newProductMode ? "secondary" : "light"}
+                        >
+                            {newProductMode ? "end editing" : "add new product"}
+                        </Button>
                     </NavDropdown>
                 </Nav>
                 <Button
-                    variant={"warning"}
+                    variant={"dark"}
                     style={{minWidth: 200, marginLeft: '2vw'}}
-                >{size + " pozycji"}</Button>
-                <Button
-                    onClick={() => setNewBookMode(prevState => !prevState)}
-                    style={{minWidth: 200, marginLeft: '2vw'}}
-                    variant={newBookMode ? "primary" : "primary"}
-                >
-                    {newBookMode ? "zakończ dodawanie" : "dodaj nową książkę"}
-                </Button>
-                <Button
-                    href={"/login"}
-                    variant={"danger"}
-                    style={{minWidth: 200, marginLeft: '2vw'}}>
-                    Wyloguj
-                </Button>
+                >{size + " products"}</Button>
             </Navbar.Collapse>
         </Navbar>
     );

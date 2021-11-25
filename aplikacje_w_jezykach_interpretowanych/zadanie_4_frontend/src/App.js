@@ -1,17 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BookPage } from "./BookPage";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {ProductPage} from "./ProductPage";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/">
-          <BookPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Switch>
+                <Route path={"/"}>
+                    <ProductPage/>
+                </Route>
+                <Route path="/store">
+                    <ProductPage/>
+                </Route>
+                <Route path="/order">
+                    <ProductPage/>
+                </Route>
+            </Switch>
+        </BrowserRouter>
+    );
 }
 
 export default App;
