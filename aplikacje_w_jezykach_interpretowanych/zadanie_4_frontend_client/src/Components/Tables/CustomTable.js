@@ -1,9 +1,8 @@
 import {Table} from "react-bootstrap";
 import {CustomRow} from "./CustomRow";
 import {useEffect, useState} from "react";
-import {process} from "./CustomRow";
 
-export function CustomTable({head = [], data, bottom = [], setEditModal}) {
+export function CustomTable({head = [], data, bottom = []}) {
 
     const [body, setBody] = useState([]);
     const [sortedBy, setSortedBy] = useState("name");
@@ -17,7 +16,7 @@ export function CustomTable({head = [], data, bottom = [], setEditModal}) {
     );
 
     function comparator(a, b, index) {
-        return String(process(a)[index]).localeCompare(String(process(b)[index]))
+        return String(a[index]).localeCompare(String(b[index]))
     }
 
     return (
@@ -44,7 +43,7 @@ export function CustomTable({head = [], data, bottom = [], setEditModal}) {
                 isHead={true}/>
             </thead>
             <tbody>
-            {body.map((row, index) => <CustomRow setEditModal={setEditModal} key={index} elements={row}/>)}
+            {body.map((row, index) => <CustomRow key={index} elements={row}/>)}
             <CustomRow elements={bottom} isHead={true}/>
             </tbody>
         </Table>

@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {TextInput} from "./TextInput";
 
 
-export function CreateProductPanel({URL, editMode, setShouldReload, setWarningModal, setToast, books}) {
+export function UserForm({URL, setShouldReload, setWarningModal, setToast}) {
 
     const [validated, setValidated] = useState(false);
     const [name, setName] = useState("");
@@ -22,7 +22,7 @@ export function CreateProductPanel({URL, editMode, setShouldReload, setWarningMo
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
         }).then(async response => {
-            if(response.ok){
+            if (response.ok) {
                 setShouldReload(Math.random())
                 setName("");
                 setCategory("");
@@ -57,21 +57,21 @@ export function CreateProductPanel({URL, editMode, setShouldReload, setWarningMo
     };
 
     return (
-        editMode ?
-            <Card className={"mt-3 mb-3"} style={{padding: 30}}>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group as={Row}>
-                        <TextInput title="name" placeholder="e.g. desk" value={name} setValue={setName}/>
-                        <TextInput title="description" placeholder="e.g. simple oak desk" value={description} setValue={setDescription}/>
-                        <TextInput title="price" placeholder="e.g. 10" value={price} setValue={setPrice}/>
-                        <TextInput title="weight" placeholder="e.g. 20" value={weight}
-                                   setValue={setWeight}/>
-                        <TextInput title="category" placeholder="e.g. furniture" value={category}
-                                   setValue={setCategory}/>
-                    </Form.Group>
-                    <Button className={"mt-4"} type="submit">add product</Button>
-                </Form>
-            </Card> : null
+        <Card className={"mt-3 mb-3"} style={{padding: 30}}>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form.Group as={Row}>
+                    <TextInput title="name" placeholder="e.g. desk" value={name} setValue={setName}/>
+                    <TextInput title="description" placeholder="e.g. simple oak desk" value={description}
+                               setValue={setDescription}/>
+                    <TextInput title="price" placeholder="e.g. 10" value={price} setValue={setPrice}/>
+                    <TextInput title="weight" placeholder="e.g. 20" value={weight}
+                               setValue={setWeight}/>
+                    <TextInput title="category" placeholder="e.g. furniture" value={category}
+                               setValue={setCategory}/>
+                </Form.Group>
+                <Button className={"mt-4"} type="submit">add product</Button>
+            </Form>
+        </Card>
     );
 }
 
