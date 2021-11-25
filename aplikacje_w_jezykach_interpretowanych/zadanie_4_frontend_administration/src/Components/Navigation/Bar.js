@@ -1,24 +1,22 @@
 import {Button, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {ToCsvButton} from "./ToCsvButton";
-import {FromCsvButton} from "./FromCsvButton";
 import React from "react";
 
 export function Bar({URL, setShouldReload, size, newProductMode, setNewProductMode}) {
 
     return (
         <Navbar bg={"dark"} variant={"dark"} fixed="top">
-            <Navbar.Brand style={{marginLeft: '1vw'}} bg="light">AJI EXERCISE 4</Navbar.Brand>
+            <Navbar.Brand style={{marginLeft: '1vw'}} bg="light">ADMINISTRATION</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <NavDropdown title={"menu"} id="basic-nav-dropdown">
+                    <NavDropdown title={"menu"}>
                         <NavDropdown.Header>navigation</NavDropdown.Header>
                         <Link to="/store">
                             <Button variant={"light"} style={{minWidth: 300}}>store</Button>
                         </Link>
                         <Link to="/order">
-                            <Button variant={"light"} style={{minWidth: 300}}>my order</Button>
+                            <Button variant={"light"} style={{minWidth: 300}}>orders</Button>
                         </Link>
                         <NavDropdown.Divider/>
                         <NavDropdown.Header>settings</NavDropdown.Header>
@@ -34,7 +32,7 @@ export function Bar({URL, setShouldReload, size, newProductMode, setNewProductMo
                 </Nav>
                 <Button
                     variant={"dark"}
-                    style={{minWidth: 200, marginLeft: '2vw'}}
+                    style={{minWidth: 100, marginLeft: '1vw'}}
                 >{size + " products"}</Button>
             </Navbar.Collapse>
         </Navbar>

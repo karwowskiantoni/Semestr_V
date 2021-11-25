@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {ProductTable} from "./Components/Tables/ProductTable";
 import {TableFilter} from "./Components/Tables/TableFilter";
 import {Bar} from "./Components/Navigation/Bar";
 import {ToastContainer} from "react-bootstrap";
-import {CreateProductPanel} from "./Components/AddPanels/CreateProductPanel";
 import {WarningModal} from "./Components/Modals/WarningModal";
 import {CustomToast} from "./Components/Modals/CustomToast";
 import {EditModal} from "./Components/Modals/EditModal";
+import {OrderTable} from "./Components/Tables/OrderTable";
 
 export function OrderPage() {
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
     const [shouldReload, setShouldReload] = useState(0);
-    const [newProductMode, setNewProductMode] = useState(false);
     const [toast, setToast] = useState({open: false, message: ""});
     const [warningModal, setWarningModal] = useState({open: false, message: ""});
     const [editModal, setEditModal] = useState({
@@ -30,8 +28,8 @@ export function OrderPage() {
         async function fetchAPI() {
             let response = await fetch(URL + "/orders");
             let json = await response.json();
-            setProducts(json);
-            setFilteredProducts(json);
+            setOrders(json);
+            setFilteredOrders(json);
         }
 
         fetchAPI();
@@ -41,9 +39,10 @@ export function OrderPage() {
         <div style={{backgroundColor: "#FFFFFF", padding: 100}}>
             <Bar URL={URL}
                  setShouldReload={setShouldReload}
-                 size={filteredProducts.length}
-                 newProductMode={newProductMode}
-                 setNewProductMode={setNewProductMode}
+                 size={filteredOrders.length}
+                 newProductMode={false}
+                 setNewProductMode={() => {
+                 }}
             />
             <WarningModal info={warningModal} setInfo={setWarningModal}/>
             <EditModal info={editModal}
@@ -55,17 +54,11 @@ export function OrderPage() {
                 <CustomToast info={toast}
                              setInfo={setToast}/>
             </ToastContainer>
-            <CreateProductPanel URL={URL}
-                                setShouldReload={setShouldReload}
-                                editMode={newProductMode}
-                                setWarningModal={setWarningModal}
-                                books={products}
-                                setToast={setToast}/>
-            <TableFilter data={products}
-                         setFilteredData={setFilteredProducts}/>
-            <ProductTable
+            <TableFilter data={orders}
+                         setFilteredData={setFilteredOrders}/>
+            <OrderTable
                 setEditModal={setEditModal}
-                products={filteredProducts}
+                orders={filteredOrders}
             />
         </div>
     );

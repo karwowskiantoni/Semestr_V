@@ -48,7 +48,7 @@ export function EditModal({URL, info, setInfo, setShouldReload, setWarningModal}
             <Modal.Header closeButton>
                 <Modal.Title>edit Product:</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{marginLeft: "3.5vw"}}>
                 <Form.Group as={Row}>
                     <TextInput title="name" value={name} setValue={setName}/>
                     <TextInput title="description" value={description} setValue={setDescription}/>

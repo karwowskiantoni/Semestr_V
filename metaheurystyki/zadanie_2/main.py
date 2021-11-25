@@ -23,8 +23,8 @@ if __name__ == '__main__':
             sums_2.append(calculate_population_adaptation_max(individuals))
             sums_3.append(calculate_population_adaptation_min(individuals))
         averages.append(sum(sums) / len(sums))
-        maximums.append(sum(sums_2) / len(sums_2))
-        minimums.append(sum(sums_3) / len(sums_3))
+        maximums.append(max(sums_2))
+        minimums.append(min(sums_3))
         print(i)
 
     for i in range(NUMBERS):
@@ -37,8 +37,8 @@ if __name__ == '__main__':
             sums_2.append(calculate_population_adaptation_max(individuals))
             sums_3.append(calculate_population_adaptation_min(individuals))
         averages_2.append(sum(sums) / len(sums))
-        maximums_2.append(sum(sums_2) / len(sums_2))
-        minimums_2.append(sum(sums_3) / len(sums_3))
+        maximums_2.append(max(sums_2))
+        minimums_2.append(min(sums_3))
         print(i)
 
     plt.plot(x_values, minimums, "#99b8ff")
@@ -47,12 +47,14 @@ if __name__ == '__main__':
     plt.plot(x_values, minimums_2, "#ffa6a6")
     plt.plot(x_values, averages_2, "#ff6969")
     plt.plot(x_values, maximums_2, "#ff0505")
+    plt.plot(x_values, [BAG_MAX_VALUE for x in range(NUMBERS)])
     plt.legend(["elite selection, minimum",
                 "elite selection, average",
                 "elite selection, maximum",
                 "roulette selection, minimum",
                 "roulette selection, average",
                 "roulette selection, maximum",
+                "max adaptation value"
                 ])
     plt.xlabel("number_of_iterations")
     plt.ylabel("individual adaptation in final population")

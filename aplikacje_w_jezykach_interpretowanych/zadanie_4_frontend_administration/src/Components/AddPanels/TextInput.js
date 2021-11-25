@@ -14,7 +14,7 @@ export function TextInput({title, placeholder, value, setValue}) {
                 placeholder={placeholder}
             />
             <Form.Control.Feedback type="invalid">
-                pole wymagane
+               field required
             </Form.Control.Feedback>
         </Form.Group>
     );
