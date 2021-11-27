@@ -2,7 +2,7 @@ import {Button, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 
-export function Bar({URL, setShouldReload, size, newProductMode, setNewProductMode}) {
+export function Bar({size, newProductMode, setNewProductMode}) {
 
     return (
         <Navbar bg={"dark"} variant={"dark"} fixed="top">

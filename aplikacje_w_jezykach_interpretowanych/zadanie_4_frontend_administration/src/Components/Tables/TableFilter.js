@@ -5,15 +5,17 @@ export function TableFilter({data, setFilteredData}) {
 
     const [value, setValue] = useState("");
 
-    useEffect(() =>{
+    useEffect(() => {
         setFilteredData(data.filter(product => haveSubstringInAnyProperty(value, product)))
-    },[data, setFilteredData, value])
+    }, [data, setFilteredData, value])
+
     function haveSubstringInAnyProperty(subString, object) {
-        for (let key in object) {
-            if (object != null || object[key].toString().toLowerCase().includes(subString.toLowerCase()))
+        for (const property of Object.values(object)) {
+            let validProperty = property === null ? "" : property
+            if (validProperty.toString().toLowerCase().includes(subString.toLowerCase()))
                 return true;
         }
-        return false
+        return false;
     }
 
     return (

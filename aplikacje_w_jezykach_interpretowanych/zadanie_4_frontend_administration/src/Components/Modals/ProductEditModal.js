@@ -1,4 +1,4 @@
-import {Button, Form, Modal, Row} from "react-bootstrap";
+import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {TextInput} from "../AddPanels/TextInput";
 
@@ -10,12 +10,21 @@ export function ProductEditModal({URL, info, setInfo, setShouldReload, setWarnin
     const [weight, setWeight] = useState("");
     const [category, setCategory] = useState("");
 
+    const [categories, setCategories] = useState([]);
     useEffect(() => {
         setName(info.product.name)
         setDescription(info.product.description)
         setPrice(info.product.price)
         setWeight(info.product.weight)
         setCategory(info.product.category)
+
+        async function fetchAPI() {
+            let response = await fetch(URL + "/categories");
+            let json = await response.json();
+            setCategories(json);
+        }
+
+        fetchAPI();
     }, [info])
 
     function updateProduct() {
@@ -58,13 +67,26 @@ export function ProductEditModal({URL, info, setInfo, setShouldReload, setWarnin
                     <TextInput title="price" value={price} setValue={setPrice}/>
                     <TextInput title="weight" value={weight} setValue={setWeight}/>
                 </Form.Group>
-                <Form.Group as={Row}>
-                    <TextInput title="category" value={category} setValue={setCategory}/>
+                <Form.Group
+                    style={{minWidth: 306}}
+                    as={Col} md="2" controlId={category}>
+                    <Form.Label>category</Form.Label>
+                    <Form.Control
+                        onChange={text => setCategory(text.target.value)}
+                        as="select"
+                        className="mr-sm-2"
+                        required
+                    >
+                        <option value="">{category}</option>
+                        {categories.map(category => {
+                            return <option key={category}>{category}</option>
+                        })}
+                    </Form.Control>
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="success" onClick={updateProduct}>
-                   Save changes
+                    Save changes
                 </Button>
             </Modal.Footer>
         </Modal>

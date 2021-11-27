@@ -1,14 +1,20 @@
-import {Button, Form, Modal, Row} from "react-bootstrap";
+import {Button, Form, Modal} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import {TextInput} from "../AddPanels/TextInput";
-import {Col} from "@jest/types/build/Global";
 
 export function OrderEditModal({URL, info, setInfo, setShouldReload, setWarningModal}) {
 
     const [status, setStatus] = useState("");
+    const [statuses, setStatuses] = useState([]);
 
     useEffect(() => {
         setStatus(info.order.status)
+        async function fetchAPI() {
+            let response = await fetch(URL + "/statuses");
+            let json = await response.json();
+            setStatuses(json);
+        }
+
+        fetchAPI();
     }, [info])
 
     function updateOrder() {
@@ -46,10 +52,8 @@ export function OrderEditModal({URL, info, setInfo, setShouldReload, setWarningM
                     className="mr-sm-2"
                     required
                 >
-                    <option value="">choose...</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                    <option value="">{status}</option>
+                    {statuses.map(status => {return <option key={status}>{status}</option>})}
                 </Form.Control>
             </Modal.Body>
             <Modal.Footer>

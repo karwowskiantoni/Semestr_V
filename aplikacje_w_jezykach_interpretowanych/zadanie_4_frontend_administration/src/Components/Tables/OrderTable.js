@@ -18,7 +18,7 @@ export function OrderTable({orders, setEditModal}) {
                         mail: order.mail,
                         phoneNumber: order.phoneNumber,
                         status: order.status,
-                        confirmDate: order.confirmDate,
+                        confirmDate: order.confirmDate === null ? "never": new Date(order.confirmDate).toLocaleString(),
                         products: productsToString(order.products),
                         id: order.id,
                     }

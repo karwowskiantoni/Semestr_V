@@ -20,8 +20,8 @@ createConnection()
       optionsSuccessStatus: 200
     }
 
-    var corsUserOptions = {
-      origin: 'http://localhost:3002',
+    var corsAllOptions = {
+      origin: '*',
       optionsSuccessStatus: 200
     }
 
@@ -66,7 +66,7 @@ createConnection()
     );
 
     app.get(
-      "/products", cors(corsAdminOptions),
+      "/products", cors(corsAllOptions),
       async (
         req: Request,
         res: Response,
@@ -197,7 +197,7 @@ createConnection()
     // ORDERS
 
     app.post(
-      "/orders", cors(corsAdminOptions),
+      "/orders", cors(corsAllOptions),
       async (
         req: Request,
         res: Response,
@@ -286,7 +286,16 @@ createConnection()
             where: { orderId: orders[i].id },
           });
           products.forEach((product) => delete product.orderId);
-          orders[i].products = products;
+          // @ts-ignore
+          const processedProducts = []
+          for (const product of products) {
+            const search = await connection.manager.find(Product, {where: {id: product.productId}})
+            processedProducts.push({
+              quantity: product.quantity,
+              name: search[0].name
+            })
+          }
+          orders[i].products = processedProducts
         }
 
         res.json(orders);

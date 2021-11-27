@@ -1,5 +1,5 @@
 import {Button, Card, Form, Row} from "react-bootstrap";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {TextInput} from "./TextInput";
 import {groupBy} from "../Tables/OrderTable";
 
@@ -10,9 +10,6 @@ export function OrderForm({URL, setWarningModal, setToast, products, setSelected
     const [username, setUsername] = useState("");
     const [mail, setMail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-
-    useEffect(() => {
-    }, [username])
 
     function sendOrder(body) {
         console.log(body)

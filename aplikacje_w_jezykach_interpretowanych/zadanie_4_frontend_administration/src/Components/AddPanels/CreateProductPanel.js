@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {TextInput} from "./TextInput";
 
 
-export function CreateProductPanel({URL, editMode, setShouldReload, setWarningModal, setToast, books}) {
+export function CreateProductPanel({URL, editMode, setShouldReload, setWarningModal, setToast}) {
 
     const [validated, setValidated] = useState(false);
     const [name, setName] = useState("");
