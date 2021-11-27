@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Bar} from "./Components/Navigation/Bar";
 import {ToastContainer} from "react-bootstrap";
 import {WarningModal} from "./Components/Modals/WarningModal";
 import {CustomToast} from "./Components/Modals/CustomToast";
 import {OrderTable} from "./Components/Tables/OrderTable";
-import {UserForm} from "./Components/AddPanels/UserForm";
+import {OrderForm} from "./Components/AddPanels/OrderForm";
 
 export function OrderPage({selectedProducts, setSelectedProducts}) {
     const [toast, setToast] = useState({open: false, message: ""});
@@ -23,7 +23,7 @@ export function OrderPage({selectedProducts, setSelectedProducts}) {
                 products={selectedProducts}
                 setProducts={setSelectedProducts}
             />
-            <UserForm/>
+            <OrderForm products={selectedProducts} URL={URL} setWarningModal={setWarningModal} setToast={setToast}/>
         </div>
     );
 }

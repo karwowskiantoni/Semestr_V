@@ -198,6 +198,7 @@ createConnection()
           req.body.mail,
           req.body.phone
         );
+        console.log(req.body)
         const orderedProducts = new Array<OrderProduct>();
         for (let i = 0; i < req.body.products.length; i++) {
           orderedProducts[i] = new OrderProduct(
@@ -206,11 +207,12 @@ createConnection()
             req.body.products[i].quantity
           );
         }
+        console.log(orderedProducts)
 
         for (let i = 0; i < orderedProducts.length; i++) {
           if (
             orderedProducts[i].quantity <= 0 ||
-            !isNaN(orderedProducts[i].quantity)
+            isNaN(orderedProducts[i].quantity)
           ) {
             res
               .status(400)
