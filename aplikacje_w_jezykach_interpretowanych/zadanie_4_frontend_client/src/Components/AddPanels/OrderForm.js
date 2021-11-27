@@ -12,7 +12,6 @@ export function OrderForm({URL, setWarningModal, setToast, products, setSelected
     const [phoneNumber, setPhoneNumber] = useState("");
 
     function sendOrder(body) {
-        console.log(body)
         fetch(`${URL}/orders`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},

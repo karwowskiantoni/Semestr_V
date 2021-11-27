@@ -39,7 +39,7 @@ export function OrderPage() {
         <div style={{backgroundColor: "#FFFFFF", padding: 100}}>
             <Bar URL={URL}
                  setShouldReload={setShouldReload}
-                 size={filteredOrders.length}
+                 sizeInfo={filteredOrders.length + " orders"}
                  newProductMode={false}
                  setNewProductMode={() => {
                  }}

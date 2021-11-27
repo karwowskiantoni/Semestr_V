@@ -2,7 +2,7 @@ import {Button, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 
-export function Bar({size, newProductMode, setNewProductMode}) {
+export function Bar({sizeInfo, newProductMode, setNewProductMode}) {
 
     return (
         <Navbar bg={"dark"} variant={"dark"} fixed="top">
@@ -33,7 +33,7 @@ export function Bar({size, newProductMode, setNewProductMode}) {
                 <Button
                     variant={"dark"}
                     style={{minWidth: 100, marginLeft: '1vw'}}
-                >{size + " products"}</Button>
+                >{sizeInfo}</Button>
             </Navbar.Collapse>
         </Navbar>
     );

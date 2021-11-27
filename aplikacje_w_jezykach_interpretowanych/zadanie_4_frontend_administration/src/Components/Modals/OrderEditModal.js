@@ -15,7 +15,7 @@ export function OrderEditModal({URL, info, setInfo, setShouldReload, setWarningM
         }
 
         fetchAPI();
-    }, [info])
+    }, [URL, info])
 
     function updateOrder() {
         let body = {

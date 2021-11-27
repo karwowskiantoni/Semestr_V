@@ -23,9 +23,8 @@ export function ProductEditModal({URL, info, setInfo, setShouldReload, setWarnin
             let json = await response.json();
             setCategories(json);
         }
-
         fetchAPI();
-    }, [info])
+    }, [URL, info])
 
     function updateProduct() {
         let body = {

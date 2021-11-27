@@ -41,7 +41,7 @@ export function ProductPage() {
         <div style={{backgroundColor: "#FFFFFF", padding: 100}}>
             <Bar URL={URL}
                  setShouldReload={setShouldReload}
-                 size={filteredProducts.length}
+                 sizeInfo={filteredProducts.length + " products"}
                  newProductMode={newProductMode}
                  setNewProductMode={setNewProductMode}
             />
