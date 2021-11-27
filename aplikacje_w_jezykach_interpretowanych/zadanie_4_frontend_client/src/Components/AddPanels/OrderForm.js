@@ -4,7 +4,7 @@ import {TextInput} from "./TextInput";
 import {groupBy} from "../Tables/OrderTable";
 
 
-export function OrderForm({URL, setShouldReload, setWarningModal, setToast, products}) {
+export function OrderForm({URL, setWarningModal, setToast, products, setSelectedProducts}) {
 
     const [validated, setValidated] = useState(false);
     const [username, setUsername] = useState("");
@@ -22,10 +22,10 @@ export function OrderForm({URL, setShouldReload, setWarningModal, setToast, prod
             body: JSON.stringify(body)
         }).then(async response => {
             if (response.ok) {
-                setShouldReload(Math.random())
                 setUsername("");
                 setPhoneNumber("");
                 setMail("");
+                setSelectedProducts([]);
                 setToast({open: true, message: "order confirmed"})
             } else {
                 response = await response.text()
@@ -69,21 +69,3 @@ export function OrderForm({URL, setShouldReload, setWarningModal, setToast, prod
         </Card>
     );
 }
-
-// <Form.Group as={Col} md="2" controlId="unit">
-//     <Form.Label>kategoria</Form.Label>
-//     <Form.Control
-//         onChange={text => setCategory(text.target.value)}
-//         as="select"
-//         className="mr-sm-2"
-//         custom
-//         required
-//     >
-//         <option value="">wybierz...</option>
-//         <option value="gramy">gramy</option>
-//         <option value="sztuki">sztuki</option>
-//     </Form.Control>
-//     <Form.Control.Feedback type="invalid">
-//         pole wymagane
-//     </Form.Control.Feedback>
-// </Form.Group>

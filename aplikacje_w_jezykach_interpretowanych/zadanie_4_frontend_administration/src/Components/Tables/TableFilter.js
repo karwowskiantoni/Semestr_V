@@ -10,7 +10,7 @@ export function TableFilter({data, setFilteredData}) {
     },[data, setFilteredData, value])
     function haveSubstringInAnyProperty(subString, object) {
         for (let key in object) {
-            if (object[key].toString().toLowerCase().includes(subString.toLowerCase()))
+            if (object != null || object[key].toString().toLowerCase().includes(subString.toLowerCase()))
                 return true;
         }
         return false

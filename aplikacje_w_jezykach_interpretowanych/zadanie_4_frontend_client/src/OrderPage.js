@@ -23,7 +23,7 @@ export function OrderPage({selectedProducts, setSelectedProducts}) {
                 products={selectedProducts}
                 setProducts={setSelectedProducts}
             />
-            <OrderForm products={selectedProducts} URL={URL} setWarningModal={setWarningModal} setToast={setToast}/>
+            <OrderForm products={selectedProducts} URL={URL} setWarningModal={setWarningModal} setToast={setToast} setSelectedProducts={setSelectedProducts}/>
         </div>
     );
 }

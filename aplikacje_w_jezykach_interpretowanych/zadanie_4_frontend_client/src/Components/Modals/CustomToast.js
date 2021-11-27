@@ -5,7 +5,7 @@ export function CustomToast({info, setInfo}) {
         <Toast bg={'light'}
                style={{ marginTop: '5vw', marginRight:'1vw', position: "relative", zIndex: 10000}}
                show={info.open}
-               delay={5000}
+               delay={1000}
                autohide={true}
                animation={false}
                onClose={() => setInfo({open: false, message: ""})}>
