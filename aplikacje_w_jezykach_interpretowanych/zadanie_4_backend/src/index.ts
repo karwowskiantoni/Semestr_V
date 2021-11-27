@@ -10,10 +10,10 @@ import { possibleTransitions, Status } from "./entity/Status";
 createConnection()
   .then(async (connection) => {
     const app = express();
-    const cors = require('cors')
+    const cors = require("cors");
 
     app.use(json());
-    app.use(cors())
+    app.use(cors());
     //PRODUCTS
     app.post(
       "/products",
@@ -192,27 +192,17 @@ createConnection()
         res: Response,
         next: NextFunction
       ): Promise<void> => {
-        const order = new Order(
-          Status.UNCONFIRMED,
-          req.body.userName,
-          req.body.mail,
-          req.body.phone
-        );
-        console.log(req.body)
-        const orderedProducts = new Array<OrderProduct>();
-        for (let i = 0; i < req.body.products.length; i++) {
-          orderedProducts[i] = new OrderProduct(
-            order.id,
-            req.body.products[i].productId,
-            req.body.products[i].quantity
-          );
-        }
-        console.log(orderedProducts)
+        const possibleProducts = req.body.products;
 
-        for (let i = 0; i < orderedProducts.length; i++) {
+        if (possibleProducts.length == 0) {
+          res.status(400).json("Order with no products");
+          next();
+          return;
+        }
+        for (let i = 0; i < possibleProducts.length; i++) {
           if (
-            orderedProducts[i].quantity <= 0 ||
-            isNaN(orderedProducts[i].quantity)
+            possibleProducts[i].quantity <= 0 ||
+            isNaN(possibleProducts[i].quantity)
           ) {
             res
               .status(400)
@@ -223,12 +213,10 @@ createConnection()
             return;
           }
           const prod = await connection.manager.find(Product, {
-            where: { id: orderedProducts[i].productId },
+            where: { id: possibleProducts[i].productId },
           });
           if (prod.length === 0) {
-            res
-              .status(400)
-              .json("No product with given id" + orderedProducts[i].productId);
+            res.status(400).json("No product with given id [" + i + "]");
             next();
             return;
           }
@@ -236,15 +224,29 @@ createConnection()
         if (
           req.body.userName === "" ||
           req.body.mail === "" ||
-          req.body.phone === "" ||
-          req.body.products.length === 0
+          req.body.phone === ""
         ) {
-          res.status(400).json("Empty user data or no products given");
+          res.status(400).json("Empty user data");
           next();
         } else if (!req.body.phone.match(/^[0-9]+$/)) {
           res.status(400).json("Phone number contains not only digits");
           next();
         } else {
+          const order = new Order(
+            Status.UNCONFIRMED,
+            req.body.userName,
+            req.body.mail,
+            req.body.phone
+          );
+
+          const orderedProducts = new Array<OrderProduct>();
+          for (let i = 0; i < possibleProducts.length; i++) {
+            orderedProducts[i] = new OrderProduct(
+              order.id,
+              possibleProducts[i].productId,
+              possibleProducts[i].quantity
+            );
+          }
           console.log("Inserting a new order into the database...");
           await connection.manager.save(order);
           console.log("Saved a new order with id: " + order.id);
@@ -253,7 +255,6 @@ createConnection()
           for (let i = 0; i < orderedProducts.length; i++) {
             await connection.manager.save(orderedProducts[i]);
           }
-
           res.json(orderedProducts);
           next();
         }
