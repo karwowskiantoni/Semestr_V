@@ -120,8 +120,8 @@ createConnection()
           id: wantedId,
         });
         if (
-          (req.body.name && req.body.name !== "") ||
-          (req.body.description && req.body.description !== "") ||
+          (req.body.name && req.body.name == "") ||
+          (req.body.description && req.body.description == "") ||
           (req.body.price && req.body.price <= 0) ||
           (req.body.weight && req.body.weight <= 0)
         ) {
