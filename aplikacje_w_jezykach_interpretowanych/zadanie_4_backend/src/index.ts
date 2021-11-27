@@ -239,6 +239,10 @@ createConnection()
             req.body.phone
           );
 
+          console.log("Inserting a new order into the database...");
+          await connection.manager.save(order);
+          console.log("Saved a new order with id: " + order.id);
+
           const orderedProducts = new Array<OrderProduct>();
           for (let i = 0; i < possibleProducts.length; i++) {
             orderedProducts[i] = new OrderProduct(
@@ -247,10 +251,6 @@ createConnection()
               possibleProducts[i].quantity
             );
           }
-          console.log("Inserting a new order into the database...");
-          await connection.manager.save(order);
-          console.log("Saved a new order with id: " + order.id);
-
           console.log(orderedProducts);
           for (let i = 0; i < orderedProducts.length; i++) {
             await connection.manager.save(orderedProducts[i]);
