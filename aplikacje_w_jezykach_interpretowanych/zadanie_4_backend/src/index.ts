@@ -14,9 +14,20 @@ createConnection()
 
     app.use(json());
     app.use(cors());
+
+    var corsAdminOptions = {
+      origin: 'http://localhost:3001',
+      optionsSuccessStatus: 200
+    }
+
+    var corsUserOptions = {
+      origin: 'http://localhost:3002',
+      optionsSuccessStatus: 200
+    }
+
     //PRODUCTS
     app.post(
-      "/products",
+      "/products", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -55,7 +66,7 @@ createConnection()
     );
 
     app.get(
-      "/products",
+      "/products", cors(corsAdminOptions, corsUserOptions),
       async (
         req: Request,
         res: Response,
@@ -75,7 +86,7 @@ createConnection()
     );
 
     app.get(
-      "/products/:prodId",
+      "/products/:prodId", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -98,7 +109,7 @@ createConnection()
     );
 
     app.put(
-      "/products/:prodId",
+      "/products/:prodId", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -111,8 +122,8 @@ createConnection()
         if (
           (req.body.name && req.body.name !== "") ||
           (req.body.description && req.body.description !== "") ||
-          (req.body.price && req.body.price >= 0) ||
-          (req.body.weight && req.body.weight >= 0)
+          (req.body.price && req.body.price <= 0) ||
+          (req.body.weight && req.body.weight <= 0)
         ) {
           res.status(400).json("Given wrong values to change");
           next();
@@ -150,7 +161,7 @@ createConnection()
     // CATEGORIES
 
     app.get(
-      "/categories",
+      "/categories", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -168,7 +179,7 @@ createConnection()
     // STATUSES
 
     app.get(
-      "/statuses",
+      "/statuses", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -186,7 +197,7 @@ createConnection()
     // ORDERS
 
     app.post(
-      "/orders",
+      "/orders", cors(corsAdminOptions, corsUserOptions),
       async (
         req: Request,
         res: Response,
@@ -262,7 +273,7 @@ createConnection()
     );
 
     app.get(
-      "/orders",
+      "/orders", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -285,7 +296,7 @@ createConnection()
     );
 
     app.put(
-      "/orders/:ordId",
+      "/orders/:ordId", cors(corsAdminOptions),
       async (req: Request, res: Response, next: NextFunction) => {
         const wantedId: number = parseInt(req.params.ordId);
         const order = await connection.manager.findOne(Order, {
@@ -313,7 +324,7 @@ createConnection()
               res.json(order);
               next();
             } else {
-              res.status(400).json("No such status");
+              res.status(400).json("Change is not possible");
               next();
             }
           } else {
@@ -325,7 +336,7 @@ createConnection()
     );
 
     app.get(
-      "/orders/:status",
+      "/orders/:status", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
