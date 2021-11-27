@@ -4,8 +4,8 @@ import {Bar} from "./Components/Navigation/Bar";
 import {ToastContainer} from "react-bootstrap";
 import {WarningModal} from "./Components/Modals/WarningModal";
 import {CustomToast} from "./Components/Modals/CustomToast";
-import {EditModal} from "./Components/Modals/EditModal";
 import {OrderTable} from "./Components/Tables/OrderTable";
+import {OrderEditModal} from "./Components/Modals/OrderEditModal";
 
 export function OrderPage() {
     const [orders, setOrders] = useState([]);
@@ -14,12 +14,12 @@ export function OrderPage() {
     const [toast, setToast] = useState({open: false, message: ""});
     const [warningModal, setWarningModal] = useState({open: false, message: ""});
     const [editModal, setEditModal] = useState({
-        open: false, product: {
-            "name": "",
-            "description": "",
-            "price": "",
-            "weight": "",
-            "category": "",
+        open: false, order: {
+            "username": "",
+            "mail": "",
+            "phone": "",
+            "confirmDate": "",
+            "status": "",
             "id": "",
         }
     });
@@ -45,11 +45,11 @@ export function OrderPage() {
                  }}
             />
             <WarningModal info={warningModal} setInfo={setWarningModal}/>
-            <EditModal info={editModal}
-                       setInfo={setEditModal}
-                       URL={URL}
-                       setShouldReload={setShouldReload}
-                       setWarningModal={setWarningModal}/>
+            <OrderEditModal info={editModal}
+                              setInfo={setEditModal}
+                              URL={URL}
+                              setShouldReload={setShouldReload}
+                              setWarningModal={setWarningModal}/>
             <ToastContainer position={'top-end'}>
                 <CustomToast info={toast}
                              setInfo={setToast}/>

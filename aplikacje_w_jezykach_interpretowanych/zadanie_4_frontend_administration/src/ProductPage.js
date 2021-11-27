@@ -6,7 +6,7 @@ import {ToastContainer} from "react-bootstrap";
 import {CreateProductPanel} from "./Components/AddPanels/CreateProductPanel";
 import {WarningModal} from "./Components/Modals/WarningModal";
 import {CustomToast} from "./Components/Modals/CustomToast";
-import {EditModal} from "./Components/Modals/EditModal";
+import {ProductEditModal} from "./Components/Modals/ProductEditModal";
 
 export function ProductPage() {
     const [products, setProducts] = useState([]);
@@ -46,11 +46,11 @@ export function ProductPage() {
                  setNewProductMode={setNewProductMode}
             />
             <WarningModal info={warningModal} setInfo={setWarningModal}/>
-            <EditModal info={editModal}
-                       setInfo={setEditModal}
-                       URL={URL}
-                       setShouldReload={setShouldReload}
-                       setWarningModal={setWarningModal}/>
+            <ProductEditModal info={editModal}
+                              setInfo={setEditModal}
+                              URL={URL}
+                              setShouldReload={setShouldReload}
+                              setWarningModal={setWarningModal}/>
             <ToastContainer position={'top-end'}>
                 <CustomToast info={toast}
                              setInfo={setToast}/>

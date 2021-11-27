@@ -66,7 +66,7 @@ createConnection()
     );
 
     app.get(
-      "/products", cors(corsAdminOptions, corsUserOptions),
+      "/products", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,
@@ -197,7 +197,7 @@ createConnection()
     // ORDERS
 
     app.post(
-      "/orders", cors(corsAdminOptions, corsUserOptions),
+      "/orders", cors(corsAdminOptions),
       async (
         req: Request,
         res: Response,

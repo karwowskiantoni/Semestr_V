@@ -2,7 +2,7 @@ import {Button, Form, Modal, Row} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {TextInput} from "../AddPanels/TextInput";
 
-export function EditModal({URL, info, setInfo, setShouldReload, setWarningModal}) {
+export function ProductEditModal({URL, info, setInfo, setShouldReload, setWarningModal}) {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -64,7 +64,7 @@ export function EditModal({URL, info, setInfo, setShouldReload, setWarningModal}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="success" onClick={updateProduct}>
-                    Zapisz zmiany
+                   Save changes
                 </Button>
             </Modal.Footer>
         </Modal>

@@ -74,21 +74,3 @@ export function CreateProductPanel({URL, editMode, setShouldReload, setWarningMo
             </Card> : null
     );
 }
-
-// <Form.Group as={Col} md="2" controlId="unit">
-//     <Form.Label>kategoria</Form.Label>
-//     <Form.Control
-//         onChange={text => setCategory(text.target.value)}
-//         as="select"
-//         className="mr-sm-2"
-//         custom
-//         required
-//     >
-//         <option value="">wybierz...</option>
-//         <option value="gramy">gramy</option>
-//         <option value="sztuki">sztuki</option>
-//     </Form.Control>
-//     <Form.Control.Feedback type="invalid">
-//         pole wymagane
-//     </Form.Control.Feedback>
-// </Form.Group>
