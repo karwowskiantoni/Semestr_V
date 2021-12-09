@@ -3,7 +3,7 @@ Use master;
 DROP DATABASE kebab;
 create database "kebab";
 use kebab;
-create table "product_type"(
+create table "product"(
 	"id" int IDENTITY(1, 1) PRIMARY KEY,
 	"name" varchar(50),
 	"price" float,
@@ -18,7 +18,7 @@ create table "employee"(
 	"id" int IDENTITY(1, 1) PRIMARY KEY,
 	"name" varchar(50),
 	"salary" int,
-	"is_busy" bit
+	"is_busy" bit,
 )
 
 create table "order"(
@@ -29,15 +29,15 @@ create table "order"(
 )
 
 --product_type-order
-create table "product"(
+create table "product_order"(
 	"order_id" int REFERENCES "order"(id),
-	"product_type_id" int REFERENCES "product_type"(id),
-	"number" int,
-	PRIMARY KEY (order_id, product_type_id)
+	"product_id" int REFERENCES "product"(id),
+	"amount" int,
+	PRIMARY KEY (order_id, product_id)
 )
 
 --order-employee
-create table "realization"(
+create table "employee_order"(
 	"employee_id" int references "employee"(id) NOT NULL,
 	"order_id" int references "order"(id) NOT NULL,
 	PRIMARY KEY (employee_id, order_id)
