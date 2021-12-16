@@ -10,9 +10,12 @@ class Board:
         file = open(file_path, "r")
 
         points = [[int(i) for i in line.split(" ")] for line in file]
+        file.close()
         self.places = [point[0] - 1 for point in points]
+        self.positons = [(point[1], point[2]) for point in points]
         self.pheromones = [[1 for _ in points] for _ in points]
-        self.distances = [[calculate_distance(i, j) for j in points] for i in points]
+        self.distances = [
+            [calculate_distance(i, j) for j in points] for i in points]
 
     def update_pheromones(self, factor, ants):
         self._evaporate_pheromones(factor)
@@ -34,4 +37,5 @@ class Board:
 
     def _intensify_pheromones(self, ant):
         for i in range(len(ant.visited_places) - 1):
-            self.pheromones[ant.visited_places[i]][ant.visited_places[i + 1]] += (1 / ant.distance_traveled(self))
+            self.pheromones[ant.visited_places[i]][ant.visited_places[i + 1]
+                                                   ] += (1 / ant.distance_traveled(self))
