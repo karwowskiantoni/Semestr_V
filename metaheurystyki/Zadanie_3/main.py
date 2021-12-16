@@ -24,14 +24,12 @@ if __name__ == '__main__':
     RANDOM_FACTOR = 0.3
     ALFA = 1
     BETA = 1
-    ITERATION_NUMBER = 1000
+    ITERATION_NUMBER = 10000
     PHEROMONES_EVAPORATION_FACTOR = 0.1
 
-    board = Board(
-        "C:\\Users\\harry\\Downloads\\Semestr_V\\metaheurystyki\\Zadanie_3\\data\\A-n80-k10.txt")
+    board = Board("data/P-n16-k8.txt")
 
-    # board.print_distances()
-    best_distances = []
+    best_ants = []
     for i in range(ITERATION_NUMBER):
         ants = [Ant(random.randint(1, len(board.places)) - 1)
                 for _ in range(POPULATION_SIZE)]
@@ -40,12 +38,13 @@ if __name__ == '__main__':
             for ant in ants:
                 ant.next_step(board, ALFA, BETA, RANDOM_FACTOR)
         board.update_pheromones(PHEROMONES_EVAPORATION_FACTOR, ants)
-        best_distances.append(
-            min([ant.distance_traveled(board) for ant in ants]))
-        print(min([ant.distance_traveled(board) for ant in ants]))
-    print()
+        minimum_distance = min([ant.distance_traveled(board) for ant in ants])
+        best_ants.append(min(ants, key=lambda x: x.distance_traveled(board)))
+    best_distances = [ant.distance_traveled(board) for ant in best_ants]
+    print(best_distances)
+    print(max(best_distances))
     print(min(best_distances))
+    best_ant = min(best_ants, key=lambda x: x.distance_traveled(board))
+    print(best_ant.visited_places)
     print(numpy.average(best_distances))
     print(numpy.median(best_distances))
-
-    # board.print_pheromones()
