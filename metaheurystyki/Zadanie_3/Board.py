@@ -1,7 +1,7 @@
 from math import sqrt
 
 
-def distance(p1, p2):
+def calculate_distance(p1, p2):
     return sqrt((p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2)
 
 
@@ -10,11 +10,19 @@ class Board:
         file = open(file_path, "r")
 
         points = [[int(i) for i in line.split(" ")] for line in file]
-        pheromones = [[1 for _ in points] for _ in points]
-        distances = [[distance(i, j) for j in points] for i in points]
+        self.places = [point[0] - 1 for point in points]
+        self.pheromones = [[1 for _ in points] for _ in points]
+        self.distances = [[calculate_distance(i, j) for j in points] for i in points]
 
-        print(points)
-        print(pheromones)
-        print(distances)
+    def evaporate_pheromones(self, factor):
+        for i in range(len(self.pheromones)):
+            for j in range(len(self.pheromones[0])):
+                self.pheromones[i][j] -= self.pheromones[i][j]*factor
 
+    def intensify_pheromones(self, ant):
+        for i in range(len(ant.visited_places) - 1):
+            self.pheromones[ant.visited_places[i]][ant.visited_places[i + 1]] += (1 / ant.distance_traveled(self))
 
+    def print_pheromones(self):
+        for pheromone in self.pheromones:
+            print(pheromone)
