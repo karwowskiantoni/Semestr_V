@@ -14,15 +14,20 @@ class Board:
         self.pheromones = [[1 for _ in points] for _ in points]
         self.distances = [[calculate_distance(i, j) for j in points] for i in points]
 
-    def evaporate_pheromones(self, factor):
-        for i in range(len(self.pheromones)):
-            for j in range(len(self.pheromones[0])):
-                self.pheromones[i][j] -= self.pheromones[i][j]*factor
-
-    def intensify_pheromones(self, ant):
-        for i in range(len(ant.visited_places) - 1):
-            self.pheromones[ant.visited_places[i]][ant.visited_places[i + 1]] += (1 / ant.distance_traveled(self))
+    def update_pheromones(self, factor, ants):
+        self._evaporate_pheromones(factor)
+        for ant in ants:
+            self._intensify_pheromones(ant)
 
     def print_pheromones(self):
         for pheromone in self.pheromones:
             print(pheromone)
+
+    def _evaporate_pheromones(self, factor):
+        for i in range(len(self.pheromones)):
+            for j in range(len(self.pheromones[0])):
+                self.pheromones[i][j] -= self.pheromones[i][j] * factor
+
+    def _intensify_pheromones(self, ant):
+        for i in range(len(ant.visited_places) - 1):
+            self.pheromones[ant.visited_places[i]][ant.visited_places[i + 1]] += (1 / ant.distance_traveled(self))
