@@ -23,6 +23,10 @@ class Board:
         for pheromone in self.pheromones:
             print(pheromone)
 
+    def print_distances(self):
+        for distance in self.distances:
+            print(distance)
+
     def _evaporate_pheromones(self, factor):
         for i in range(len(self.pheromones)):
             for j in range(len(self.pheromones[0])):

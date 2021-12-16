@@ -10,7 +10,7 @@ def random_selection(places):
 
 
 def calculate_weight(pheromone, distance, alfa, beta):
-    return ((pheromone * 1) ** alfa) * ((1 / distance) ** beta)
+    return (pheromone ** alfa) * ((1 / distance) ** beta)
 
 
 class Ant:

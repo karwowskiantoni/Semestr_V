@@ -3,6 +3,7 @@ import random
 from Ant import Ant
 from Board import Board
 
+
 def print_best_distance(ants, board):
     best_distance = ants[0].distance_traveled(board)
 
@@ -13,16 +14,16 @@ def print_best_distance(ants, board):
 
 
 if __name__ == '__main__':
-    POPULATION_SIZE = 50
+    POPULATION_SIZE = 100
     RANDOM_FACTOR = 0.1
-    ALFA = 0
+    ALFA = 2
     BETA = 1
-    ITERATION_NUMBER = 1000
+    ITERATION_NUMBER = 10
     PHEROMONES_EVAPORATION_FACTOR = 0.2
 
-    board = Board("data/P-n76-k5.txt")
+    board = Board("data/P-n16-k8.txt")
 
-    board.print_pheromones()
+    board.print_distances()
 
     for _ in range(ITERATION_NUMBER):
         ants = [Ant(random.randint(1, len(board.places)) - 1) for _ in range(POPULATION_SIZE)]
