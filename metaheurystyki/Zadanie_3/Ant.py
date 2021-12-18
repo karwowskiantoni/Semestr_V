@@ -21,13 +21,11 @@ class Ant:
     def distance_traveled(self, board):
         distance_sum = 0
         for i in range(len(self.visited_places) - 1):
-            distance_sum += board.distances[self.visited_places[i]
-                                            ][self.visited_places[i + 1]]
+            distance_sum += board.distances[self.visited_places[i]][self.visited_places[i + 1]]
         return distance_sum
 
     def next_step(self, board, alfa, beta, random_factor):
-        not_visited_places = [
-            a for a in board.places if a not in self.visited_places]
+        not_visited_places = [a for a in board.places if a not in self.visited_places]
         current_place = self.visited_places[-1]
 
         if random.random() <= random_factor:
@@ -37,5 +35,4 @@ class Ant:
                                         board.distances[current_place][next_place], alfa, beta)
                        for next_place in not_visited_places]
             probabilities = [weight / sum(weights) for weight in weights]
-            self.visited_places.append(roulette_selection(
-                not_visited_places, probabilities))
+            self.visited_places.append(roulette_selection(not_visited_places, probabilities))

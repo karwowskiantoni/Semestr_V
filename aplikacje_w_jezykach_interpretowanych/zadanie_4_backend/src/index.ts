@@ -13,6 +13,7 @@ createConnection()
     const cors = require("cors");
 
     app.use(json());
+
     app.use(cors());
 
     var corsAdminOptions = {
