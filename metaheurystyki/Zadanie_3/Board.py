@@ -11,6 +11,7 @@ class Board:
 
         points = [[int(i) for i in line.split(" ")] for line in file]
         file.close()
+        self.title = file_path
         self.places = [point[0] - 1 for point in points]
         self.positions = [(point[1], point[2]) for point in points]
         self.pheromones = [[1 for _ in points] for _ in points]
