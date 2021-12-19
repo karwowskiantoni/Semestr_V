@@ -8,17 +8,18 @@ import matplotlib.pyplot as plt
 from Ant import Ant
 from Board import Board
 
-POPULATION_SIZE = [10, 30, 50]
-RANDOM_FACTOR = 0.05
-ALFA = [1, 2]
-BETA = [1, 3]
-ITERATION_NUMBER = 100
-PHEROMONES_EVAPORATION_FACTOR = [0.1, 0.5]
+POPULATION_SIZE = 10  # [10, 30, 50]
+RANDOM_FACTOR = 0.01  # [0.01, 0.3]
+ALFA = 1  # [1, 2]
+BETA = 1  # [1, 3]
+ITERATION_NUMBER = 150
+PHEROMONES_EVAPORATION_FACTOR = 0.5  # [0.1, 0.5]
 
 
 def ant_algorithm(file_path, color, position, results):
     board = Board(file_path)
     best_ants = []
+
     for _ in tqdm(range(ITERATION_NUMBER), colour=color, position=position, leave=False):
         last_place = len(board.places) - 1
         ants = [Ant(randint(0, last_place)) for _ in range(POPULATION_SIZE)]
@@ -66,8 +67,7 @@ def plot_paths(results):
                      textcoords="offset points", xytext=(5, -5))
         for place in best_ant.visited_places:
             plt.annotate(place + 1, board.positions[place], textcoords="offset points", xytext=(0, 7), ha='center')
-        plt.ylabel("Najlepsza znaleziona trasa")
-
+        plt.xlabel("Najlepsza znaleziona trasa: " + str(best_ant.distance_traveled(board)))
 
     plt.tight_layout()
     plt.show()
@@ -87,5 +87,5 @@ if __name__ == '__main__':
     for process in processes:
         process.join()
 
-    plot_iterations(results.values())
+    plot_iterations([results[key] for key in sorted(results)])
     plot_paths(results.values())
