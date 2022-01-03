@@ -1,46 +1,14 @@
-from numpy import pi, e, sin, exp, sqrt, cos, linspace, meshgrid
+from numpy import linspace, meshgrid
 from tqdm import tqdm
-import matplotlib.pyplot as plt
+from random import uniform
 from Particle import Particle
-import random
+import matplotlib.pyplot as plt
+
+from functions import mccormic_function, ackley_function
 
 
-def ackley_function(x, y):
-    return -20.0 * exp(-0.2 * sqrt(0.5 * (pow(x, 2) + pow(y, 2)))) - exp(0.5 * (cos(2 * pi * x) + cos(
-        2 * pi * y))) + e + 20
-
-
-def mccormic_function(x, y):
-    return sin(x + y) + pow(x - y, 2) - 1.5 * x + 2.5 * y + 1
-
-
-def rand(domain):
-    return random.uniform(domain[0], domain[1])
-
-
-if __name__ == '__main__':
-    ITERATION_NUMBER = 100
-    POPULATION_SIZE = 200
-    INERTIA = 1
-    COGNITIVE_CONSTANT = 1
-    SOCIAL_CONSTANT = 1
-    DOMAIN = [-5, 5]
-    ADAPTATION_FUNCTION = mccormic_function
-
-    particles = [Particle(rand(DOMAIN),
-                          rand(DOMAIN),
-                          INERTIA,
-                          COGNITIVE_CONSTANT,
-                          SOCIAL_CONSTANT,
-                          ADAPTATION_FUNCTION)
-                 for _ in range(POPULATION_SIZE)]
-
-    for _ in tqdm(range(ITERATION_NUMBER)):
-        pass
-
-    x = linspace(-5, 5, num=100)
-    y = linspace(-5, 5, num=100)
-    X, Y = meshgrid(x, y)
+def draw_plot(domain, particles):
+    X, Y = meshgrid(linspace(domain[0], domain[1], num=100), linspace(domain[0], domain[1], num=100))
     Z = ADAPTATION_FUNCTION(X, Y)
 
     ax = plt.axes(projection='3d')
@@ -52,3 +20,40 @@ if __name__ == '__main__':
                  color='red')
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, edgecolor="none", alpha=0.4)
     plt.show()
+
+
+if __name__ == '__main__':
+    ITERATION_NUMBER = 10
+    POPULATION_SIZE = 50
+    INERTIA = 0.2
+    COGNITIVE_CONSTANT = 0.3
+    SOCIAL_CONSTANT = 0.4
+    DOMAIN = [-5, 5]
+    ADAPTATION_FUNCTION = mccormic_function
+
+    particles = [Particle(uniform(DOMAIN[0], DOMAIN[1]),
+                          uniform(DOMAIN[0], DOMAIN[1]),
+                          INERTIA,
+                          COGNITIVE_CONSTANT,
+                          SOCIAL_CONSTANT,
+                          ADAPTATION_FUNCTION)
+                 for _ in range(POPULATION_SIZE)]
+
+    for _ in tqdm(range(ITERATION_NUMBER)):
+        best_adaptation = particles[0].best_adaptation
+        best_x = particles[0].x
+        best_y = particles[0].y
+
+        for particle in particles:
+            new_adaptation = particle.update_adaptation()
+            if new_adaptation > best_adaptation:
+                best_adaptation = new_adaptation
+                best_x = particle.x
+                best_y = particle.y
+        for particle in particles:
+            particle.update_velocity(best_x, best_y)
+            particle.update_position()
+
+        draw_plot(DOMAIN, particles)
+
+
