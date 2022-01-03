@@ -20,12 +20,12 @@ def rand(domain):
 
 if __name__ == '__main__':
     ITERATION_NUMBER = 100
-    POPULATION_SIZE = 50
+    POPULATION_SIZE = 200
     INERTIA = 1
     COGNITIVE_CONSTANT = 1
     SOCIAL_CONSTANT = 1
     DOMAIN = [-5, 5]
-    ADAPTATION_FUNCTION = ackley_function
+    ADAPTATION_FUNCTION = mccormic_function
 
     particles = [Particle(rand(DOMAIN),
                           rand(DOMAIN),
@@ -38,11 +38,12 @@ if __name__ == '__main__':
     for _ in tqdm(range(ITERATION_NUMBER)):
         pass
 
-    ax = plt.axes(projection='3d')
     x = linspace(-5, 5, num=100)
     y = linspace(-5, 5, num=100)
     X, Y = meshgrid(x, y)
     Z = ADAPTATION_FUNCTION(X, Y)
+
+    ax = plt.axes(projection='3d')
     ax.scatter3D([p.x for p in particles],
                  [p.y for p in particles],
                  [p.actual_adaptation for p in particles],
