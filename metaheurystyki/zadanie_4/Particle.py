@@ -9,7 +9,7 @@ class Particle:
 
         self.x = x
         self.y = y
-        self.actual_adaptation = 0
+        self.actual_adaptation = self.adaptation_function(x, y)
 
         self.best_x = x
         self.best_y = y
