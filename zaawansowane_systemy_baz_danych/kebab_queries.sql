@@ -12,7 +12,7 @@ group by e.id
 --2 total number and price of sold products in each product_type
 
 
---3 all orders not finished yet
+--3 all orders not finished yet + pracownik ktory przyjal zamowienie
 select *
 from "order"
 where realization_time is null
@@ -49,6 +49,7 @@ select id, name, round(weight/price, 3) as weight_price_proportion
 from product
 
 --12 employees which made only vegan products
+--12b percent of orders which was only vegans
 select *
 from employee e
 left join employee_order eo on eo.employee_id = e.id

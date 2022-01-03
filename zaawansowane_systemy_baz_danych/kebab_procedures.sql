@@ -72,6 +72,7 @@ end
 
 --3
 --decrease salary of employee when his total profit (function below) in month is lower than salary
+--tak sire nierobi podwyzka dla pracow2nika miesiaca o dany procent od jego zysku
 drop procedure lowerSalary
 go
 create procedure lowerSalary(@emp int, @from datetime, @to datetime)
