@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from functions import mccormic_function, ackley_function
 
 
-def draw_plot(domain, particles):
+def draw_plot(domain, particles, adaptation_function):
     X, Y = meshgrid(linspace(domain[0], domain[1], num=100), linspace(domain[0], domain[1], num=100))
-    Z = ADAPTATION_FUNCTION(X, Y)
+    Z = adaptation_function(X, Y)
 
     ax = plt.axes(projection='3d')
     ax.scatter3D([p.x for p in particles],
@@ -23,9 +23,9 @@ def draw_plot(domain, particles):
 
 
 if __name__ == '__main__':
-    ITERATION_NUMBER = 10
+    ITERATION_NUMBER = 100
     POPULATION_SIZE = 50
-    INERTIA = 0.2
+    INERTIA = 0.3
     COGNITIVE_CONSTANT = 0.3
     SOCIAL_CONSTANT = 0.4
     DOMAIN = [-5, 5]
@@ -40,20 +40,23 @@ if __name__ == '__main__':
                  for _ in range(POPULATION_SIZE)]
 
     for _ in tqdm(range(ITERATION_NUMBER)):
-        best_adaptation = particles[0].best_adaptation
+
+        # begin find best individual
+        best_actual_adaptation = particles[0].actual_adaptation
         best_x = particles[0].x
         best_y = particles[0].y
 
         for particle in particles:
-            new_adaptation = particle.update_adaptation()
-            if new_adaptation > best_adaptation:
-                best_adaptation = new_adaptation
+            if particle.actual_adaptation > best_actual_adaptation:
+                best_actual_adaptation = particle.actual_adaptation
                 best_x = particle.x
                 best_y = particle.y
+        # end find best individual
+
         for particle in particles:
             particle.update_velocity(best_x, best_y)
             particle.update_position()
+            particle.update_adaptation()
 
-        draw_plot(DOMAIN, particles)
-
+    draw_plot(DOMAIN, particles, ADAPTATION_FUNCTION)
 
