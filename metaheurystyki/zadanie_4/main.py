@@ -23,13 +23,13 @@ def draw_plot(domain, particles, adaptation_function):
 
 
 if __name__ == '__main__':
-    ITERATION_NUMBER = 10
+    ITERATION_NUMBER = 30
     POPULATION_SIZE = 50
     INERTIA = 0.4
     COGNITIVE_CONSTANT = 0.3
     SOCIAL_CONSTANT = 0.6
     DOMAIN = [-5, 5]
-    ADAPTATION_FUNCTION = mccormic_function
+    ADAPTATION_FUNCTION = ackley_function
 
     # averages = []
     # for i in range(40):
@@ -59,9 +59,17 @@ if __name__ == '__main__':
         draw_plot(DOMAIN, particles, ADAPTATION_FUNCTION)
         # averages.append(sum(p.actual_adaptation for p in particles) / len(particles))
 
+    print(max([p.best_adaptation for p in particles]))
+    for particle in particles:
+        print("---------------------------")
+        print(particle.best_adaptation)
+        print(particle.best_x)
+        print(particle.best_y)
+        print("---------------------------")
     # plt.plot([i * 0.01 for i in range(40)], averages)
     # plt.xlabel("inertia")
     # plt.ylabel("average adaptation in population")
     # plt.show()
+    print(mccormic_function(-5, 5))
 
 
