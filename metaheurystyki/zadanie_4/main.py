@@ -23,25 +23,25 @@ def draw_plot(domain, particles, adaptation_function):
 
 
 if __name__ == '__main__':
-    ITERATION_NUMBER = 100
+    ITERATION_NUMBER = 10
     POPULATION_SIZE = 50
-    INERTIA = 0.3
+    INERTIA = 0.4
     COGNITIVE_CONSTANT = 0.3
-    SOCIAL_CONSTANT = 0.4
+    SOCIAL_CONSTANT = 0.6
     DOMAIN = [-5, 5]
     ADAPTATION_FUNCTION = mccormic_function
 
+    # averages = []
+    # for i in range(40):
     particles = [Particle(uniform(DOMAIN[0], DOMAIN[1]),
                           uniform(DOMAIN[0], DOMAIN[1]),
                           INERTIA,
                           COGNITIVE_CONSTANT,
                           SOCIAL_CONSTANT,
-                          ADAPTATION_FUNCTION)
+                          ADAPTATION_FUNCTION, DOMAIN)
                  for _ in range(POPULATION_SIZE)]
 
-    for _ in tqdm(range(ITERATION_NUMBER)):
-
-        # begin find best individual
+    for _ in tqdm(range(ITERATION_NUMBER), ncols=200):
         best_actual_adaptation = particles[0].actual_adaptation
         best_x = particles[0].x
         best_y = particles[0].y
@@ -51,12 +51,17 @@ if __name__ == '__main__':
                 best_actual_adaptation = particle.actual_adaptation
                 best_x = particle.x
                 best_y = particle.y
-        # end find best individual
 
         for particle in particles:
             particle.update_velocity(best_x, best_y)
             particle.update_position()
             particle.update_adaptation()
+        draw_plot(DOMAIN, particles, ADAPTATION_FUNCTION)
+        # averages.append(sum(p.actual_adaptation for p in particles) / len(particles))
 
-    draw_plot(DOMAIN, particles, ADAPTATION_FUNCTION)
+    # plt.plot([i * 0.01 for i in range(40)], averages)
+    # plt.xlabel("inertia")
+    # plt.ylabel("average adaptation in population")
+    # plt.show()
+
 

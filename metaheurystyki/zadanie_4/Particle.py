@@ -2,11 +2,12 @@ from random import random
 
 
 class Particle:
-    def __init__(self, x, y, inertia, cognitive_constant, social_constant, adaptation_function):
+    def __init__(self, x, y, inertia, cognitive_constant, social_constant, adaptation_function, domain):
         self.inertia = inertia
         self.cognitive_constant = cognitive_constant
         self.social_constant = social_constant
         self.adaptation_function = adaptation_function
+        self.domain = domain
 
         self.x_velocity = 0
         self.y_velocity = 0
@@ -40,7 +41,18 @@ class Particle:
                            (self.social_constant * random()) * (best_y_in_population - self.y)
 
     def update_position(self):
-        self.x += self.x_velocity
-        self.y += self.y_velocity
+        if self.x + self.x_velocity < self.domain[0]:
+            self.x = self.domain[0]
+        elif self.x + self.x_velocity > self.domain[1]:
+            self.x = self.domain[1]
+        else:
+            self.x += self.x_velocity
+
+        if self.y + self.y_velocity < self.domain[0]:
+            self.y = self.domain[0]
+        elif self.y + self.y_velocity > self.domain[1]:
+            self.y = self.domain[1]
+        else:
+            self.y += self.y_velocity
 
 
