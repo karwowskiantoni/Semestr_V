@@ -1,100 +1,127 @@
+use kebab;
+
+
+
 --1
 --procedure which create order with products and realizations connected to specific employee and product_types
-drop procedure createOrder
 go
-create procedure createOrder(@prod int, @amount int, @emp int, @location varchar(50))
+create or alter procedure createOrder(
+	@product_id int,
+	@employee_id int,
+	@amount int, 
+	@location varchar(50)
+)
 as
 begin
-	declare @empExists int = (select count(*) from employee where id = @emp)
-	declare @prodExists int = (select count(*) from product where id = @prod)
-	declare @isBusy bit = (select is_busy from employee where id = @emp)
-	if(@empExists = 1 or @prodExists = 1)
-	begin
-		if(@isBusy = 'False')
-		begin
-			update employee set is_busy = 'True' where id = @emp
-			insert into "order" (acceptance_time, location) values (GETDATE(), @location)
-			declare @order int = (select top 1 id from "order" order by id desc)
-			insert into product_order (order_id, product_id, amount) values (@order, @prod, @amount)
-			insert into employee_order (employee_id, order_id) values (@emp, @order)
-			print 'Zlozono zamowienie'
-		end
-		else
-		begin
-			print 'Nie mozna zamowic. Pracownik zajety.'
-		end
-	end
+
+	if(@employee_id is null)
+		print 'Pracownik nie istnieje, nie mo¿na z³o¿yæ zamówienia';
+
+	else if(@product_id is null)
+		print 'Produkt nie istnieje, nie mo¿na z³o¿yæ zamówienia';
+
+	else if exists(select * from product where id = @product_id and is_archive = 1)
+		print 'Produkt archiwalny, nie mo¿na z³o¿yæ zamówienia';
+
+	else if((select is_busy from employee where id = @employee_id) = 1)
+		print 'Pracownik zajêty, nie mo¿na z³o¿yæ zamówienia';
+
 	else 
 	begin
-		print 'Produkt lub pracownik nie istnieje'
+		update employee set is_busy = 'True' where id = @employee_id
+		insert into "order" (acceptance_time, location) values (GETDATE(), @location)
+		declare @order_id int = (select top 1 id from "order" order by id desc)
+		insert into product_order (order_id, product_id, amount) values (@order_id, @product_id, @amount)
+		insert into employee_order (employee_id, order_id) values (@employee_id, @order_id)
+		print 'Zlozono zamowienie'
 	end
 end
---
-drop procedure completeOrder
+
+
+
+--2
+--procedure which complete order with given id
 go
-create procedure completeOrder(@ord int)
+create or alter procedure completeOrder(@order int)
 as
 begin
-	declare @emp int = (select employee_id from employee_order where order_id = @ord)
+	declare @emp int = (select employee_id from employee_order where order_id = @order)
 	declare @busy bit = (select is_busy from employee where id = @emp)
-	declare @realizationTime datetime = (select realization_time from "order" where id = @ord)
-	if(@realizationTime is null and @busy = 'True')
+	declare @realizationTime datetime = (select realization_time from "order" where id = @order)
+	
+	if not exists (select id from "order" where id = @order)
+		print 'Nie mo¿na zakoñczyæ, nie ma takiego zamówienia';
+
+	else if @realizationTime is not null
+		print 'Nie mo¿na zakoñczyæ, zamówienie zosta³o ju¿ zakoñczone';
+
+	else if @busy = 0
+		print 'b³¹d spójnoœci danych, pracownik nie jest przypisany do tego zamówienia';
+
+	else 
 	begin
-		update "order" set realization_time = GETDATE() where id = @ord
+		update "order" set realization_time = GETDATE() where id = @order
 		update employee set is_busy = 'False' where id = @emp
 		print 'Zamowienie ukonczone'
 	end
-	else
-	begin
-		print 'Niespojnosc danych. Pracownik przypisany do zamowienia go nie obsluguje'
-	end
 end
-exec createOrder 5, 3, 1, 'Czestochowa'
-exec completeOrder  20
-select * from "order"
---2
---remove product which was sold least times
-drop procedure removeUnpopularProduct
+
+
+--3
+--remove products which was sold least times
 go
-create procedure removeUnpopularProduct
+create or alter procedure removeUnpopularProducts
 as
 begin
-	with productsCounter as (
-	select p.id, count(p.id) as orders
+	with order_number_per_product as (
+	select p.id, count(po.product_id) as order_number
 	from product p
 	left join product_order po on po.product_id = p.id
 	group by p.id)
 
-	delete from product where id = (select id
-									from productsCounter
-									where orders = (select min(orders) from productsCounter))
+	delete product where product.id in (
+		select id from order_number_per_product where order_number = (select min(order_number) from order_number_per_product))
 end
 
---3
---decrease salary of employee when his total profit (function below) in month is lower than salary
---tak sire nierobi podwyzka dla pracow2nika miesiaca o dany procent od jego zysku
-drop procedure lowerSalary
+
+
+
+--4
+--increase salary of employee which generated biggest profit in specific time period
 go
-create procedure lowerSalary(@emp int, @from datetime, @to datetime)
+create or alter procedure increase_best_employee_salary(@from datetime, @to datetime)
 as
 begin
-	declare @isLower bit, @salary float, @totalProfit float
-	set @salary = (select salary from employee where id = @emp)
-	set @totalProfit = (dbo.timeProfit(@emp, @from, @to))
-	if(@salary < @totalProfit)
+	if (
+		select count(id) from employee 
+		where dbo.timeProfit(id, @from, @to) = (
+			select max(dbo.timeProfit(id, @from, @to)) from employee
+		)
+	) > 1
+		print 'Brak najlepszego pracownika, nie mo¿na przyznaæ premii'
+	
+	else 
 	begin
-		update employee set salary = salary * 0.8 where id = @emp
-		print 'Pracownik zarobil mniej niz jego miesieczna pensja'
+		declare @best_employee_id int = (
+			select id from employee 
+			where dbo.timeProfit(id, @from, @to) = (
+				select max(dbo.timeProfit(id, @from, @to)) from employee
+			)
+		)
+		declare @best_employee_name varchar(50) = (select name from employee where id = @best_employee_id)
+		begin
+			update employee set salary = salary * 1.1 where id = @best_employee_id
+			print 'Podwy¿szono pensjê najlepszego pracownika: ' + @best_employee_name
+		end
 	end
-	else
-		print 'Pracownik zarobil wiecej niz jego miesieczna pensja.'
 end
+
+
 
 --function
 --returns total profit generated by employee in period of time
-drop function timeProfit
 go
-create function timeProfit(@emp int, @from datetime, @to datetime)
+create or alter function timeProfit(@emp int, @from datetime, @to datetime)
 returns float
 as
 begin
@@ -118,6 +145,4 @@ begin
 	deallocate kursor
 	return @sum
 end
-
-select id, dbo.timeProfit(id, DATETIMEFROMPARTS(2000, 12, 1, 21,37, 22,0), GETDATE())
-from employee
+go 
