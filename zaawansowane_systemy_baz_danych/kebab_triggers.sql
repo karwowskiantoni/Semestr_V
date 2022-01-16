@@ -1,6 +1,7 @@
+use kebab;
+
 --1
 --Trigger which archives product and creates new on update
-use kebab;
 go
 CREATE OR ALTER TRIGGER archive_and_create_instead_of_update ON product
 INSTEAD OF UPDATE
