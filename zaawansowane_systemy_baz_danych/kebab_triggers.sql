@@ -1,5 +1,5 @@
 --1
---archive product and create new on update
+--Trigger which archives product and creates new on update
 use kebab;
 go
 CREATE OR ALTER TRIGGER archive_and_create_instead_of_update ON product
@@ -22,12 +22,11 @@ BEGIN
 	
 	update product set is_archive = 1 
 	where product.id in (select id from @to_update)
-
+	print 'Zmiana cech produktu spowodowa³a jego archiwizacjê w bazie danych i utworzenie nowego o zmienionych parametrach'
 END
 
-
 --2
---archive product on delete
+--Trigger which archives product on delete
 go
 CREATE OR ALTER TRIGGER archive_instead_of_delete ON product
 INSTEAD OF DELETE
@@ -35,10 +34,11 @@ AS
 BEGIN
 	update product set is_archive = 1 
 	where product.id in (select id from deleted)
+	print 'Usunieciê produktu spowodowalo jego archiwizacjê w bazie danych'
 END
 
 --3
---increase employee salary on every third order
+--Trigger which increases employee salary on every third order
 go
 CREATE OR ALTER TRIGGER bonus_on_third_order ON employee_order
 for insert
@@ -47,7 +47,7 @@ BEGIN
 	declare @order_number int = (select count(*) from employee_order where employee_id in (select employee_id from inserted))
 	if @order_number % 3 = 0 and @order_number != 0
 	begin
-		print 'zamówienie jubileuszowe, pensja pracownika zostaje zwiêkszona o 5'
+		print 'UWAGA! Zamówienie jubileuszowe, pensja pracownika zostaje zwiêkszona o 5!'
 		update employee set salary = salary + 5 
 		where employee.id in (select employee_id from inserted)
 	end
