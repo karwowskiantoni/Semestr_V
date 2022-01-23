@@ -14,9 +14,6 @@ class Client:
     def distance_between(self, client):
         return sqrt((self.x - client.x) ** 2 + (self.y - client.y) ** 2) + self.service_time
 
-    def is_in_time(self, time):
-        return self.start_time <= time <= self.end_time
-
     def print(self):
         print('id: ' + str(self.id) +
               ' x: ' + str(self.x) +
