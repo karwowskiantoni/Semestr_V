@@ -1,8 +1,8 @@
-from fitness import fitness
-from genetic_algorithm import genetic_algorithm, random_individual
-from reader import read
+from random import sample
+
+from data.reader import read
+from vehicle_genetic.algorithm import algorithm
 
 if __name__ == '__main__':
-    data = read('data/R1/R101.txt')
-    genetic_algorithm(data)
-    # print(fitness(data, random_individual(data, 10)))
+    data = read('data/values/R1/R101.txt')
+    algorithm(sample(data, 5))

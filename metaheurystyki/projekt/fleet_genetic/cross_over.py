@@ -1,14 +1,11 @@
 import numpy as np
 
 
-def find_separators(individual):
-    return np.array(np.where(np.array(individual) == -1)).tolist()[0]
+def cross_over(pair):
+    return erx(pair[0], pair[1])
 
 
 def erx(a, b):
-    sraka = find_separators(a)
-    a = list(filter(lambda x: x != -1, a))
-    b = list(filter(lambda x: x != -1, b))
     H = calc_adjency_matrix(a)
     H = calc_adjency_matrix(b, H=H)
 
@@ -32,8 +29,6 @@ def erx(a, b):
             _next = [neighbors[k] for k in range(len(neighbors)) if n_neighbors[k] == min_n_neighbors]
             _next = np.random.choice(_next)
 
-    for gowno in sraka:
-        y.insert(gowno, -1)
     return y
 
 
