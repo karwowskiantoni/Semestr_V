@@ -1,4 +1,4 @@
-def fitness(data, individual):
+def v_fitness(data, first_point, individual):
     current_time = 0
     distance_sum = 0
     for i in range(len(individual) - 1):
@@ -17,4 +17,12 @@ def fitness(data, individual):
             current_time += distance
             distance_sum += distance
 
-    return distance_sum
+    return first_distance(data, first_point, individual) + distance_sum + last_distance(data, first_point, individual)
+
+
+def first_distance(data, first_point, individual):
+    return first_point.distance_between(data[individual[0]])
+
+
+def last_distance(data, first_point, individual):
+    return first_point.distance_between(data[individual[-1]])

@@ -1,6 +1,6 @@
-from data.Client import Client
+from data.Point import Point
 
 
 def read(filename):
     file = open(filename)
-    return [Client(line.split()) for line in file]
+    return [Point(line.split()) for line in file]

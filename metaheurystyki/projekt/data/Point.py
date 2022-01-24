@@ -1,7 +1,7 @@
 from math import sqrt
 
 
-class Client:
+class Point:
     def __init__(self, params):
         self.id = float(params[0])
         self.x = float(params[1])
