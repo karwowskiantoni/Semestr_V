@@ -4,7 +4,7 @@ import numpy as np
 def fitness(data, individual):
     # print(car_fitness(data, split_into_cars(individual)[0]))
     return first_distance(data, individual) + \
-           sum([car_fitness(data, car) for car in (split_into_cars(individual))]) + \
+           sum([car_fitness(data, car) for car in split_into_cars(individual)]) + \
            last_distance(data, individual)
 
 
@@ -24,8 +24,10 @@ def car_fitness(data, car):
         next_client = data[car[i + 1]]
         distance = client.distance_between(next_client)
         delivery_time = time + distance
+        if sum(data[gene].demand for gene in car) > 200:
+            return 1000000000
         if delivery_time > next_client.end_time:
-            return 10000000
+            return 1000000
         elif delivery_time < next_client.start_time:
             time = next_client.start_time
             distance_sum += distance
