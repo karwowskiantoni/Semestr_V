@@ -10,16 +10,16 @@ def f_algorithm(
         start_point,
         v_population_size=50,
         vehicles_number=50,
-        population_size=100,
-        number_of_iterations=100,
+        population_size=200,
+        number_of_iterations=200,
         survival_probability=1,
         mutating_probability=0.5,
         color='red'
 ):
     population = [random_individual(data, vehicles_number) for _ in range(population_size)]
 
-    best_fitnesses = []
-    for i in tqdm(range(number_of_iterations), ncols=200, colour=color):
+    best_fitness_ever = 1000000
+    for i in tqdm(range(number_of_iterations), ncols=200, colour="#" + "".join([random.choice('0123456789ABCDEF') for j in range(6)])):
         survivors, parents = separate_parents(population, survival_probability)
         parents = elite_selection(data, start_point, parents, v_population_size)
         pairs = select_pairs(parents)
@@ -28,9 +28,9 @@ def f_algorithm(
         population = survivors + mutated_children
         best = best_individual(data, start_point, population, v_population_size)
         best_fitness = f_fitness(data, start_point, best, v_population_size)
-        best_fitnesses.append(best_fitness if best_fitness < 1000000 else None)
-        # print(str(best_fitness) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
-    return best_fitnesses
+        if best_fitness < best_fitness_ever:
+            best_fitness_ever = best_fitness
+    return best_fitness_ever
 
 
 def vehicles_in(individual):
