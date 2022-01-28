@@ -1,7 +1,7 @@
 from vehicle_genetic.v_algorithm import v_algorithm
 
 
-def f_fitness(data, first_point, individual, only_estimated=True):
+def f_fitness(data, first_point, individual, v_population_size, only_estimated=True):
     #  [0 0 1 1 0 0 2 2] <- individual
     #  | | | | | | | | |
     #  v v v v v v v v v
@@ -12,9 +12,9 @@ def f_fitness(data, first_point, individual, only_estimated=True):
     too_bigness = [is_too_big(data, vehicle) for vehicle in vehicles]
     if sum(too_bigness) == 0:
         if only_estimated:
-            vehicles_fitness = [v_algorithm([data[i] for i in vehicle], first_point) for vehicle in vehicles]
+            vehicles_fitness = [v_algorithm([data[i] for i in vehicle], first_point, population_size=v_population_size) for vehicle in vehicles]
         else:
-            vehicles_fitness = [v_algorithm([data[i] for i in vehicle], first_point, only_estimated=False, number_of_iterations=100, population_size=100) for vehicle in vehicles]
+            vehicles_fitness = [v_algorithm([data[i] for i in vehicle], first_point, population_size=v_population_size, only_estimated=False, number_of_iterations=100) for vehicle in vehicles]
     else:
         vehicles_fitness = [10000000000000]
 

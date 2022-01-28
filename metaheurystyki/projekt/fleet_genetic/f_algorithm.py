@@ -8,6 +8,7 @@ from fleet_genetic.f_fitness import f_fitness, split_into_vehicles
 def f_algorithm(
         data,
         start_point,
+        v_population_size=50,
         vehicles_number=50,
         population_size=100,
         number_of_iterations=100,
@@ -20,14 +21,14 @@ def f_algorithm(
     best_fitnesses = []
     for i in tqdm(range(number_of_iterations), ncols=200, colour=color):
         survivors, parents = separate_parents(population, survival_probability)
-        parents = elite_selection(data, start_point, parents)
+        parents = elite_selection(data, start_point, parents, v_population_size)
         pairs = select_pairs(parents)
         children = cross_genes(pairs)
         mutated_children = [mutate_individual(individual, mutating_probability) for individual in children]
         population = survivors + mutated_children
-        best = best_individual(data, start_point, population)
-        best_fitness = f_fitness(data, start_point, best)
-        best_fitnesses.append(best_fitness if best_fitness < 1000000 else 4000)
+        best = best_individual(data, start_point, population, v_population_size)
+        best_fitness = f_fitness(data, start_point, best, v_population_size)
+        best_fitnesses.append(best_fitness if best_fitness < 1000000 else None)
         # print(str(best_fitness) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
     return best_fitnesses
 
@@ -44,12 +45,12 @@ def random_individual(data, vehicles_number):
     return [random.randint(0, vehicles_number - 1) for _ in range(len(data))]
 
 
-def best_individual(data, start_point, population):
-    return sorted(population, key=lambda i: f_fitness(data, start_point, i))[0]
+def best_individual(data, start_point, population, v_population_size):
+    return sorted(population, key=lambda i: f_fitness(data, start_point, i, v_population_size))[0]
 
 
-def elite_selection(data, start_point, population):
-    better_part = sorted(population, key=lambda individual: f_fitness(data, start_point, individual))[:len(population) // 5]
+def elite_selection(data, start_point, population, v_population_size):
+    better_part = sorted(population, key=lambda individual: f_fitness(data, start_point, individual, v_population_size))[:len(population) // 5]
     return better_part + better_part + better_part + better_part + better_part
 
 
