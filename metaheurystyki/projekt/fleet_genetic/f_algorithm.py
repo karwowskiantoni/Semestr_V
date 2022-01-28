@@ -1,5 +1,6 @@
 import random
 
+from tqdm import tqdm
 from fleet_genetic.f_cross_over import uniform_cross_over
 from fleet_genetic.f_fitness import f_fitness, split_into_vehicles
 
@@ -12,10 +13,12 @@ def f_algorithm(
         number_of_iterations=100,
         survival_probability=1,
         mutating_probability=0.5,
+        color='red'
 ):
     population = [random_individual(data, vehicles_number) for _ in range(population_size)]
 
-    for i in range(number_of_iterations):
+    best_fitnesses = []
+    for i in tqdm(range(number_of_iterations), ncols=200, colour=color):
         survivors, parents = separate_parents(population, survival_probability)
         parents = elite_selection(data, start_point, parents)
         pairs = select_pairs(parents)
@@ -24,11 +27,9 @@ def f_algorithm(
         population = survivors + mutated_children
         best = best_individual(data, start_point, population)
         best_fitness = f_fitness(data, start_point, best)
-        best_best = 1000000
-        if best_fitness < best_best:
-            best_best = best
-        print(str(best_fitness) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
-    return best_best
+        best_fitnesses.append(best_fitness if best_fitness < 1000000 else 4000)
+        # print(str(best_fitness) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
+    return best_fitnesses
 
 
 def vehicles_in(individual):
