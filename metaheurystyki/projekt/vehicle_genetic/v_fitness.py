@@ -5,16 +5,17 @@ def v_fitness(data, first_point, individual):
         client = data[individual[i]]
         next_client = data[individual[i + 1]]
         distance = client.distance_between(next_client)
+        service_time = next_client.service_time
 
-        if current_time + distance > next_client.end_time:
+        if current_time + distance + service_time > next_client.end_time:
             return 1000000
 
-        elif current_time + distance < next_client.start_time:
-            current_time = next_client.start_time
+        elif current_time + distance + service_time < next_client.start_time:
+            current_time = next_client.start_time + service_time
             distance_sum += distance
 
         else:
-            current_time += distance
+            current_time += distance + service_time
             distance_sum += distance
 
     return first_distance(data, first_point, individual) + distance_sum + last_distance(data, first_point, individual)

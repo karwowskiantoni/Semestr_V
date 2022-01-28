@@ -12,7 +12,7 @@ class Point:
         self.service_time = float(params[6])
 
     def distance_between(self, client):
-        return sqrt((self.x - client.x) ** 2 + (self.y - client.y) ** 2) + self.service_time
+        return sqrt((self.x - client.x) ** 2 + (self.y - client.y) ** 2)
 
     def print(self):
         print('id: ' + str(self.id) +

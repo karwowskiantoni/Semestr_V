@@ -1,6 +1,6 @@
 import random
 
-from fleet_genetic.f_cross_over import cross_over, uniform_cross_over
+from fleet_genetic.f_cross_over import uniform_cross_over
 from fleet_genetic.f_fitness import f_fitness, split_into_vehicles
 
 
@@ -9,9 +9,9 @@ def f_algorithm(
         start_point,
         vehicles_number=50,
         population_size=100,
-        number_of_iterations=10000,
-        survival_probability=0.8,
-        mutating_probability=0.1,
+        number_of_iterations=100,
+        survival_probability=1,
+        mutating_probability=0.5,
 ):
     population = [random_individual(data, vehicles_number) for _ in range(population_size)]
 
@@ -23,8 +23,12 @@ def f_algorithm(
         mutated_children = [mutate_individual(individual, mutating_probability) for individual in children]
         population = survivors + mutated_children
         best = best_individual(data, start_point, population)
-        print(str(f_fitness(data, start_point, best)) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
-    return f_fitness(data, start_point, best)
+        best_fitness = f_fitness(data, start_point, best)
+        best_best = 1000000
+        if best_fitness < best_best:
+            best_best = best
+        print(str(best_fitness) + ' vehicles: ' + str(vehicles_in(best)) + ' biggest vehicle: ' + str(biggest_vehicle(best)))
+    return best_best
 
 
 def vehicles_in(individual):
@@ -41,7 +45,6 @@ def random_individual(data, vehicles_number):
 
 def best_individual(data, start_point, population):
     return sorted(population, key=lambda i: f_fitness(data, start_point, i))[0]
-    # return sorted([f_fitness(data, start_point, individual) for individual in population])
 
 
 def elite_selection(data, start_point, population):
@@ -76,7 +79,7 @@ def cross_genes(pairs):
 
 
 def mutate_individual(individual, mutating_probability):
-    if random.random() > mutating_probability:
+    if random.random() < mutating_probability:
         index_1, index_2 = random.randint(0, len(individual) - 1), random.randint(0, len(individual) - 1)
         individual[index_1], individual[index_2] = individual[index_2], individual[index_1]
     return individual
