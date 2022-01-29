@@ -19,6 +19,7 @@ def f_algorithm(
     population = [random_individual(data, vehicles_number) for _ in range(population_size)]
 
     best_fitness_ever = 1000000
+    best_individual_ever = None
     for i in tqdm(range(number_of_iterations), ncols=200, colour="#" + "".join([random.choice('0123456789ABCDEF') for j in range(6)])):
         survivors, parents = separate_parents(population, survival_probability)
         parents = elite_selection(data, start_point, parents, v_population_size)
@@ -30,7 +31,8 @@ def f_algorithm(
         best_fitness = f_fitness(data, start_point, best, v_population_size)
         if best_fitness < best_fitness_ever:
             best_fitness_ever = best_fitness
-    return best_fitness_ever
+            best_individual_ever = best
+    return f" fitness: {best_fitness_ever} number of vehicles: {vehicles_in(best_individual_ever)} biggest vehicle: {biggest_vehicle(best_individual_ever)}"
 
 
 def vehicles_in(individual):
