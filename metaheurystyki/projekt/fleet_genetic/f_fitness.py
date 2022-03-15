@@ -50,7 +50,7 @@ def is_too_big(data, vehicle):
     return sum([data[client_id].demand for client_id in vehicle]) > 200
 
 
-def split_into_vehicles(individual: list[int]):
+def split_into_vehicles(individual):
     vehicle_fleet_len = max(individual) + 1
     vehicles = [[] for _ in range(vehicle_fleet_len)]
     for i in range(len(individual)):
